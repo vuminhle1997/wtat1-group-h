@@ -1,0 +1,33 @@
+{
+  "name": "wt-imi",
+  "version": "1.0.0",
+  "description": "MERN",
+  "main": "index.js",
+  "author": "Phan, The Manh | Le, Vu Minh | Nguyen-Dinh, Cong",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "dev": "nodemon ./index.js",
+    "run-react-dev": "yarn --cwd ./frontend run start",
+    "startDev": "concurrently \"yarn run dev\" \"yarn run run-react-dev\"",
+    "start": "node ./index.js"
+  },
+  "dependencies": {
+    "axios": "^0.19.2",
+    "concurrently": "^5.1.0",
+    "crypto": "^1.0.1",
+    "dotenv": "^8.2.0",
+    "errorhandler": "^1.5.1",
+    "express": "^4.17.1",
+    "express-jwt": "^5.3.1",
+    "express-session": "^1.17.0",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.15",
+    "mongoose": "^5.9.7",
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
+  }
+}
