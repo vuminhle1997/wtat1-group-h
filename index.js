@@ -7,13 +7,10 @@ const ENV = process.env.NODE_ENV === 'production';
 const app = new express();
 
 // middle-wares e.g. "body-parser"
-
-if (ENV == true) {
-    mongoose.connect(process.env.MONGO_URL, (err) => {
-        if (err) throw new Error(err);
-        console.log(`Connected to Database . . .`);
-    });    
-}
+mongoose.connect(process.env.MONGO_URL, {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true}, function(err) {
+    if (err) return console.log(err)
+    console.log(`App is connected to DB`);
+});
 
 require('./models/User');
 require('./config/passport');
