@@ -7,6 +7,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
+    "preInstall": "yarn install && yarn --cwd ./client install",
     "dev": "nodemon ./index.js",
     "run-react-dev": "yarn --cwd ./client run start",
     "startDev": "concurrently \"yarn run dev\" \"yarn run run-react-dev\"",
