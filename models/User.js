@@ -12,7 +12,7 @@ let UserSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    firsname: { 
+    firstname: { 
         type: String,
         required: true
     },
@@ -26,7 +26,7 @@ let UserSchema = new mongoose.Schema({
     },
     dob: {
         type: Date,
-        required: true
+        required: false
     },
     personalId: {
         type: String,

@@ -2,43 +2,177 @@ let router = require('express').Router();
 const mongoose = require('mongoose');
 let User = mongoose.model('User');
 
-router.get('/user', (req, res, next) => {
-    res.json('ASD')
-});
+const saltRound = 10;
+const bcrypt = require('bcrypt');
+const auth = require('../auth');
+const jwt = require('jsonwebtoken');
+const secret = require('../../config').secret; 
 
-router.post('/users', (req, res, next) => {
+/**
+ * This functions creates a credential token for the User.
+ * The token is necessary for the Header Body "Bearer" and the backend of this app
+ * needs to identify and decode the token, so the User can do some CRUD operations
+ */
+function createJWTToken(id, username) {
+    const today = new Date();
+    let expire = new Date(today);
+    expire.setDate(today.getDate() + 60);
+
+    return jwt.sign({
+        id: id,
+        username: username,
+        exp: parseInt(expire.getTime()/ 1000)
+    }, secret);
+}
+
+/**
+ * Registrates an user into the DB.
+ */
+router.post('/users/create', (req, res, next) => {
     const {
         username,
+        password,
+        firstname,
+        lastname,
+        gender,
+        dob,
+        personalId,
+        email,
+        address,
+        phonenumber,
+        latitude,
+        longitude,
+        role
+    } = req.body.user;
+
+    User.findOne({email: email}, async (err, doc) => {
+        if (err) throw new Error(err);
+        if (doc) return res.json({mes: 'User already exits'});
+    });
+
+    bcrypt.hash(password, saltRound, async(err, hash) => {
+        if (err) throw new Error(err);
+        User.create({
+            username: username,
+            password: hash,
+            firstname: firstname,
+            lastname: lastname,
+            gender: gender,
+            dob: dob,
+            personalId: personalId,
+            email: email,
+            address: address,
+            phonenumber: phonenumber,
+            latitude: latitude,
+            longitude: longitude,
+            role: role
+        }).then(async (doc) => {
+            const token = await createJWTToken(doc._id, doc.username);
+            return res.json({
+                mes: 'You succesfully registrrated . . .',
+                token: token
+            });
+        }).catch((err) => {
+            return res.json(err);
+        });
+    });
+});
+
+router.post('/users/login', (req, res) => {
+    const {
         email,
         password
     } = req.body.user;
 
+    User.findOne({email: email}, (err, doc) => {
+        if (err) throw new Error(err);
+
+        if (!doc) {
+            return res.json({mes: 'User does not exits'});
+        } else {
+            /**
+             * Mongoose returns a document.
+             * The id of the document is named "_id"
+             */
+            bcrypt.compare(password, doc.password, async (err, result) => {
+                if (err) throw new Error(err);
+                if (result === false) {
+                    // WRONG PASSWORD
+                    return res.sendStatus(400);
+                } else {
+                    // VALID PASSWORD 
+                    const token = await createJWTToken(doc._id, doc.username);
+                    return res.json({
+                        mes: 'You succcesfully logged in and get redirected',
+                        token: token
+                    });
+                }
+            });
+        }
+    });
+        
+});
+
+router.put('/users/editProfile', auth.required , (req, res, next) => {
+    const { id } = req.payload;
+    const {
+        username,
+        password,
+        firstname,
+        lastname,
+        gender,
+        dob,
+        personalId,
+        email,
+        address,
+        phonenumber,
+        latitude,
+        longitude,
+    } = req.body.user;
     
-    let user = new User();
-    user.username = username;
-    user.email = email;
-    user.setPassword(password);
+    User.findById(id, (err, doc) => {
+        if (err) throw new Error(err);
+        if (doc) {
+            doc.username = username;
+            doc.password = password;
+            doc.firstname = firstname;
+            doc.lastname = lastname;
+            doc.gender = gender;
+            doc.dob = dob;
+            doc.personalId = personalId;
+            doc.email = email;
+            doc.address = address;
+            doc.phonenumber = phonenumber;
+            doc.latitude = latitude;
+            doc.longitude = longitude;
 
-
-    return user.save().then(async (doc) => {
-        // await doc.populate('username email', (err, res) => {
-        //     if (err) throw new Error(err);
-        //     res.json(res);
-        // });
-        console.log(`${user} is stored`)
-        res.json({
-            mes: "ready",
-            data: doc
-        });
+            doc.save().then((value) => {
+                return res.json({
+                    mes: 'Profile succesfully changed . . .',
+                    user: value
+                });
+            }).catch(next);
+        } else {
+            return res.sendStatus(400);
+        }
     }).catch(next);
 });
 
-router.put('/users', (req, res, next) => {
 
-});
-
-router.delete('/users', (req, res, next) => {
-
+router.delete('/users/deleteProfile', auth.required , (req, res, next) => {
+    const { id } = req.payload;
+    User.findById(id, (err, doc) => {
+        if (err) return res.send(err);
+        bcrypt.compare(req.body.user.password, doc.password, async(err, result) => {
+            if (err) throw new Error(err);
+            if (result === true) {
+                await doc.remove();
+                return res.sendStatus(200);
+            } else {
+                return res.sendStatus(400);
+            }
+        });
+    }).catch(next);
 });
 
 module.exports = router;
