@@ -15,6 +15,7 @@ mongoose.connect(process.env.MONGO_URL, {useNewUrlParser: true, useUnifiedTopolo
 });
 
 require('./models/User');
+require('./models/Report');
 require('./config/passport');
 app.use(require('./routes'));
 

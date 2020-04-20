@@ -4,9 +4,9 @@ let User = mongoose.model('User');
 
 const saltRound = 10;
 const bcrypt = require('bcrypt');
-const auth = require('../auth');
+const auth = require('../../auth');
 const jwt = require('jsonwebtoken');
-const secret = require('../../config').secret; 
+const secret = require('../../../config').secret; 
 
 /**
  * This functions creates a credential token for the User.
@@ -27,8 +27,9 @@ function createJWTToken(id, username) {
 
 /**
  * Registrates an user into the DB.
+ * ENDPOINT: /api/v1.0/users/create
  */
-router.post('/users/create', (req, res, next) => {
+router.post('/create', (req, res, next) => {
     const {
         username,
         password,
@@ -78,7 +79,12 @@ router.post('/users/create', (req, res, next) => {
     });
 });
 
-router.post('/users/login', (req, res) => {
+/**
+ * Users logs into app!
+ * ENDPOINT: /api/v1.0/users/create
+ * Responses back with a JWT Token
+ */
+router.post('/login', (req, res) => {
     const {
         email,
         password
@@ -113,7 +119,7 @@ router.post('/users/login', (req, res) => {
         
 });
 
-router.put('/users/editProfile', auth.required , (req, res, next) => {
+router.put('/editProfile', auth.required , (req, res, next) => {
     const { id } = req.payload;
     const {
         username,
@@ -151,15 +157,21 @@ router.put('/users/editProfile', auth.required , (req, res, next) => {
                     mes: 'Profile succesfully changed . . .',
                     user: value
                 });
-            }).catch(next);
+            }).catch((err) => {
+                console.log(err);
+                return res.sendStatus(400);
+            });
         } else {
             return res.sendStatus(400);
         }
-    }).catch(next);
+    }).catch((err) => {
+        console.log(err);
+        return res.sendStatus(400);
+    });
 });
 
 
-router.delete('/users/deleteProfile', auth.required , (req, res, next) => {
+router.delete('/deleteProfile', auth.required , (req, res) => {
     const { id } = req.payload;
     User.findById(id, (err, doc) => {
         if (err) return res.send(err);
@@ -172,7 +184,10 @@ router.delete('/users/deleteProfile', auth.required , (req, res, next) => {
                 return res.sendStatus(400);
             }
         });
-    }).catch(next);
+    }).catch((err) => {
+        console.log(err);
+        return res.sendStatus(400);
+    });
 });
 
 module.exports = router;

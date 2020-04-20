@@ -1,7 +1,16 @@
 let router = require('express').Router();
 
-router.use('/v1.0', require('./v1.0'));
-// router.use('/reports', require('./v1/reports'));
+
+// router.get('/', function(req, res, next) {
+//     res.send('Hello v1.0 GET API from TechBrij.com');
+// });
+
+// router.post('/', function(req, res, next) {
+//     res.send('Hello v1.0 POST API from TechBrij.com');
+// });
+
+router.use('/users', require('./users'));
+router.use('/reports', require('./reports'));
 // router.use('/articles', require('./articles'))
 // router.use('/profiles', require('./profiles'))
 
