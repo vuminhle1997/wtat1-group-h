@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const crypto = require('crypto');
+// const crypto = require('crypto');
 
 let UserSchema = new mongoose.Schema({
     username: {
@@ -7,6 +7,10 @@ let UserSchema = new mongoose.Schema({
         required: true,
         lowercase: true,
         index: true
+    },
+    password: {
+        type: String,
+        required: true
     },
     firsname: { 
         type: String,
@@ -28,6 +32,12 @@ let UserSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    email: {
+        type: String,
+        required: true,
+        index: true,
+        lowercase: true
+    },
     address: {
         type: String,
         required: true
@@ -44,14 +54,6 @@ let UserSchema = new mongoose.Schema({
         type: Number,
         required: false
     },
-    email: {
-        type: String,
-        required: true,
-        index: true,
-        lowercase: true
-    },
-    hash: String,
-    salt: String,
     role: {
         type: String,
         enum: ["User", "Government"],
@@ -59,9 +61,9 @@ let UserSchema = new mongoose.Schema({
     }
 }, { timestamps: true });
 
-UserSchema.methods.setPassword = function(password){
-    this.salt = crypto.randomBytes(16).toString('hex');
-    this.hash = crypto.pbkdf2Sync(password, this.salt, 10000, 512, 'sha512').toString('hex');
-}
+// UserSchema.methods.setPassword = function(password){
+//     this.salt = crypto.randomBytes(16).toString('hex');
+//     this.hash = crypto.pbkdf2Sync(password, this.salt, 10000, 512, 'sha512').toString('hex');
+// }
 
 mongoose.model('User', UserSchema);
