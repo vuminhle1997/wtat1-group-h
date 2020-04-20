@@ -8,6 +8,42 @@ let UserSchema = new mongoose.Schema({
         lowercase: true,
         index: true
     },
+    firsname: { 
+        type: String,
+        required: true
+    },
+    lastname: {
+        type: String,
+        required: true
+    },
+    gender: {
+        type: String,
+        enum: ['M','F']
+    },
+    dob: {
+        type: Date,
+        required: true
+    },
+    personalId: {
+        type: String,
+        required: true
+    },
+    address: {
+        type: String,
+        required: true
+    },
+    phonenumber: {
+        type: String,
+        required: false
+    },
+    latitude: {
+        type: Number,
+        required: false
+    },
+    longitude: {
+        type: Number,
+        required: false
+    },
     email: {
         type: String,
         required: true,
@@ -16,9 +52,10 @@ let UserSchema = new mongoose.Schema({
     },
     hash: String,
     salt: String,
-    bio: {
+    role: {
         type: String,
-        default: ``
+        enum: ["User", "Government"],
+        required: false
     }
 }, { timestamps: true });
 
