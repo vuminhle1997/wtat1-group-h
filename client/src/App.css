@@ -7,6 +7,21 @@
   pointer-events: none;
 }
 
+#map {
+  position: inherit !important;
+  min-height: 480px;
+  max-height: 680px;
+  min-width: 480px !important;
+  max-width: 1024px !important;
+  margin: 0 auto;
+}
+
+#map > div {
+  position: relative !important;
+  height: 400px !important;
+  width: 100%;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
