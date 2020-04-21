@@ -9,9 +9,11 @@ const morgan = require('morgan');
 const fs = require('fs');
 const path = require('path');
 const cookieParser = require('cookie-parser');
+const cors = require('cors');
 
 const app = new express();
 
+app.use(cors());
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(morgan('combined', {
