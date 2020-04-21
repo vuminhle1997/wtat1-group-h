@@ -55,7 +55,7 @@ let UserSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ["User", "Government"],
+        enum: ["User", "Employee_Public_Health"],
         required: false
     },
     active: {

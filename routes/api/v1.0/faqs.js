@@ -9,7 +9,7 @@ router.get('/', auth.optional, (req, res) => {
     const limit = 10;
     let offset = 0;
 
-    TipsFAQ.find()
+    TipsFAQ.find(query)
         .limit(limit)
         .skip(offset)
         .sort({createdAt: 'desc'})

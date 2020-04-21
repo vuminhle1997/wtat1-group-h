@@ -8,13 +8,16 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const fs = require('fs');
 const path = require('path');
+const cookieParser = require('cookie-parser');
 
 const app = new express();
 
 app.use(bodyParser.json());
+app.use(cookieParser());
 app.use(morgan('combined', {
     stream: fs.createWriteStream(path.join(__dirname, './logs/access.log'), { flags: 'a'})
 }));
+app.use(express.static(path.join(__dirname, 'public')));
 // middle-wares e.g. "body-parser"
 mongoose.connect(process.env.MONGO_URL, {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true}, (err) => {
     if (err) return console.log(err)
