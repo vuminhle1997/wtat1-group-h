@@ -12,7 +12,12 @@ let TipsFaqSchema = new mongoose.Schema({
     visible: {
         type: Boolean,
         required: true
+    },
+    author: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
     }
-});
+}, {timestamps: true});
 
 mongoose.model('TipsFAQ', TipsFaqSchema);

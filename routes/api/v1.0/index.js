@@ -10,6 +10,7 @@ let router = require('express').Router();
 
 router.use('/users', require('./users'));
 router.use('/reports', require('./reports'));
+router.use('/faqs', require('./faqs.js'));
 // router.use('/articles', require('./articles'))
 // router.use('/profiles', require('./profiles'))
 
