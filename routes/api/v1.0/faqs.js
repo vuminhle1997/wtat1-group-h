@@ -4,7 +4,7 @@ const TipsFAQ = mongoose.model('TipsFAQ');
 let router = require('express').Router();
 const auth = require('../../auth');
 
-router.get('/', (req, res) => {
+router.get('/', auth.optional, (req, res) => {
     let query = {};
     const limit = 10;
     let offset = 0;
@@ -25,6 +25,21 @@ router.get('/', (req, res) => {
             console.err(err);
             return res.sendStatus(500);
         });
+});
+
+router.get('/faq', auth.optional, (req, res) => {
+    const id = req.query.id ? req.query.id : undefined;
+    if (!id) {
+        TipsFAQ.findById(id, (err, doc) => {
+            if (err) {
+                console.error(err);
+                return res.sendStatus(500);
+            }
+            return res.status(200).json(doc.depopulate('author'));
+        });
+    } else {
+        return res.sendStatus(400);
+    }
 });
 
 router.post('/faqs', auth.required, (req, res) => {
