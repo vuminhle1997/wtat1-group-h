@@ -42,11 +42,12 @@ router.get('/faq', auth.optional, (req, res) => {
     }
 });
 
-router.post('/faqs', auth.required, (req, res) => {
+router.post('/faq', auth.required, (req, res) => {
     if (auth.required) {
         if (req.payload.id) {
-            User.findById(req.paylaod.id, (err, user) => {
-                if (user.role === 'Government') {
+            User.findById(req.payload.id, (err, user) => {
+                // return res.json(user)
+                if (user.role === 'Government' && user) {
                     const {
                         title,
                         description,
@@ -57,6 +58,7 @@ router.post('/faqs', auth.required, (req, res) => {
                     tipsfaq.title = title;
                     tipsfaq.description = description;
                     tipsfaq.visible = visible;
+                    tipsfaq.author = user;
 
                     tipsfaq.save({validateBeforeSave: true}, (err, obj) => {
                         if (err) {
@@ -65,7 +67,7 @@ router.post('/faqs', auth.required, (req, res) => {
                         }
                         return res.status(200).json({
                             mes: 'FAQ succesfully created . . .',
-                            faq: obj
+                            faq: obj.depopulate('author')
                         });
                     });
                 } else {
