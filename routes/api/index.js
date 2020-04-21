@@ -1,10 +1,37 @@
 let router = require('express').Router();
+const mongoose = require('mongoose');
+const User = mongoose.model('User');
 
 router.use('/v1.0', require('./v1.0'));
-// router.use('/reports', require('./v1/reports'));
-// router.use('/articles', require('./articles'))
-// router.use('/profiles', require('./profiles'))
 
+router.get('/verify', (req, res) => {
+    if (req.query) {
+        const hash = req.query.hash;
+        const id = req.query.id;
+       
+        User.findById(id, (err, user) => {
+            if (err) {
+                console.error(err);
+                return res.sendStatus(404);
+            }
+            if (user.password === hash) {
+                user.active = true;
+                user.save()
+                    .then((doc) => {
+                        return res.status(200).json(doc.populate('-password'));
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        return res.sendStatus(500);
+                    })
+            } else {
+                return res.sendStatus(401);
+            }
+        });
+    } else {
+        return res.sendStatus(500);
+    }
+});
 
 router.use(function(err, req, res, next) {
     if (err.name === 'ValidationError') {
