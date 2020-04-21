@@ -4,10 +4,15 @@ const TipsFAQ = mongoose.model('TipsFAQ');
 let router = require('express').Router();
 const auth = require('../../auth');
 
+const AUTHORIZED_USER = require('../../../config/roles').roles.ADMIN;
+
 router.get('/', auth.optional, (req, res) => {
     let query = {};
     const limit = 10;
     let offset = 0;
+
+    if (req.query.offset && Number.isInteger(parseInt(req.query.offset)))
+        offset += parseInt(req.query.offset);
 
     TipsFAQ.find(query)
         .limit(limit)
@@ -17,7 +22,7 @@ router.get('/', auth.optional, (req, res) => {
             console.log(results);
             return res.json({
                 faqs: results.map(faq => {
-                    return faq;
+                    return faq.depopulate('author');
                 })
             });
         })
@@ -47,7 +52,7 @@ router.post('/faq', auth.required, (req, res) => {
         if (req.payload.id) {
             User.findById(req.payload.id, (err, user) => {
                 // return res.json(user)
-                if (user.role === 'Government' && user) {
+                if (user.role === AUTHORIZED_USER) {
                     const {
                         title,
                         description,
