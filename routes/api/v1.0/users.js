@@ -296,7 +296,7 @@ router.put('/editProfile', auth.required , (req, res, next) => {
     });
 });
 
-
+// ENDPOINT: /api/v1.0/users//deleteProfile
 router.delete('/deleteProfile', auth.required , (req, res) => {
     const { id } = req.payload;
     User.findById(id, (err, doc) => {
