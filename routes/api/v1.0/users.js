@@ -71,7 +71,7 @@ router.post('/create', (req, res, next) => {
         }).then(async (doc) => {
             const token = await createJWTToken(doc._id, doc.username);
             return res.json({
-                mes: 'You succesfully registrrated . . .',
+                mes: 'You succesfully registered . . .',
                 token: token
             });
         }).catch((err) => {
