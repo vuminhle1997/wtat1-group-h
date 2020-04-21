@@ -46,9 +46,10 @@ router.post('/create', (req, res, next) => {
         role
     } = req.body.user;
 
+    //checks if user exists by email if yes ->  message user already exists
     User.findOne({email: email}, async (err, doc) => {
         if (err) throw new Error(err);
-        if (doc) return res.json({mes: 'User already exits'});
+        if (doc) return res.json({mes: 'User already exists'});
     });
 
     bcrypt.hash(password, saltRound, async(err, hash) => {
