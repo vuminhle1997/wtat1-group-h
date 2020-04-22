@@ -1,0 +1,6 @@
+# Routes
+
+## Endpoints
+```yarn
+    /api/
+```

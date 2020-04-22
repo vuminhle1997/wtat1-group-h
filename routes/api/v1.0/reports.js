@@ -6,6 +6,7 @@ const InfectedArea = mongoose.model('InfectedArea');
 const auth = require('../../auth');
 
 const USER = require('../../../config/roles').roles.USER;
+const ADMIN = require('../../../config/roles').roles.ADMIN;
 const parseBoolean = require('../../../config/helper').parseBoolean;
 
 router.get('/', (req, res) => {
@@ -200,8 +201,8 @@ router.put('/report', auth.required, async (req, res) => {
 });
 
 router.delete('/report', auth.required, (req, res) => {
-    const { _id } = req.body.report;
     if (req.payload.id) {
+        const { _id } = req.body.report;
         Report.findById(_id, async(err, doc) => {
             if (err) {
                 console.error(err);
@@ -236,6 +237,42 @@ router.delete('/report', auth.required, (req, res) => {
         });
     } else {
         return res.sendStatus(401);
+    }
+});
+
+router.put('/positive', auth.required, (req,res) => {
+    if (req.payload.id) {
+        const { _id } = req.body.report;
+        User.findById(req.payload.id, async(err, user) => {
+            if (err) {
+                console.error(err);
+                return res.sendStatus(404);
+            }
+            if (user.role === ADMIN) {
+                await Report.findById(_id, (err, report) => {
+                    if (err) {
+                        console.error(err);
+                        return res.sendStatus(500);
+                    } 
+                    if (report) {
+                        report.status = true;
+                        report.save()
+                            .then(result => {
+                                console.log(result);
+                                return res.status(200).json({mes: 'Report set to positive'});
+                            })
+                            .catch(err => {
+                                console.error(err);
+                                return res.sendStatus(500);
+                            })
+                    } else {
+                        return res.sendStatus(404);
+                    }
+                });
+            } else {
+                return res.sendStatus(401);
+            }
+        });
     }
 });
 

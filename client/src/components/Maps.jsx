@@ -2,52 +2,13 @@ import React, { Component, createRef } from 'react';
 import Axios from 'axios';
 class Maps extends Component {
     googleMapRef = React.createRef()
-    // markedCountries = [
-    //     {
-    //         country: "United States of America",
-    //         lat: 38.171526,
-    //         lng: -101.211448
-    //     },
-    //     {
-    //         country: "Viet Nam",
-    //         lat: 21.164367,
-    //         lng: 105.238347
-    //     },
-    //     {
-    //         country: "Germany",
-    //         lat: 51.488458,
-    //         lng: 10.297640
-    //     },
-    //     {
-    //         country: "korea (south)",
-    //         lat: 36.604946,
-    //         lng: 127.948234
-    //     },
-    //     {
-    //         country: "France",
-    //         lat: 47.380787,
-    //         lng: 2.2890001
-    //     },
-    //     {
-    //         country: "Cuba",
-    //         lat: 22.179434,
-    //         lng: -79.843747
-    //     },
-    //     {
-    //         country: "peru",
-    //         lat: -8.064251,
-    //         lng: -76.109381
-    //     }, 
-    // ];
 
     constructor(props) {
         super(props);
         this.state = {
             googleMap: null,
-            // global: {},
-            // countries: [],
-            // markOnMap: [],
-            infectedAreas: []
+            infectedAreas: [],
+            infectedCountries: []
         }
     }
 
@@ -58,32 +19,13 @@ class Maps extends Component {
 
         googleMapScript.addEventListener('load',() => {
             this.state.googleMap = this.createGoogleMap()
-            // this.props.markers.map(obj => {
-            //     this.createCircle(obj.position)
-            // });
             this.onMapChange();
-            // this.fetchData();
+            this.fetchData();
         });    
     }
 
     componentDidUpdate() {
-        const { infectedAreas } = this.state;
-        if (infectedAreas.length > 0) {
-            infectedAreas.map(area => {
-                this.drawInfectedAreaCircle(area)
-            });
-        }
-        // if (this.state.countries.length > 0) {
-        //     this.markedCountries.forEach(obj => {
-        //         this.state.countries.some(country => {
-        //             if (country.Country.toLowerCase() === obj.country.toLowerCase()) {
-        //                 this.state.markOnMap.push(country)
-        //                 this.drawInfectedArea({lat: obj.lat, lng: obj.lng}, country.TotalConfirmed, country);
-        //             }
-        //         })
-                
-        //     });
-        // }
+        
     }
 
     createGoogleMap = () => {
@@ -96,14 +38,31 @@ class Maps extends Component {
         })
     }
 
+    drawCircles = () => {
+        const { infectedAreas, infectedCountries } = this.state;
+        if (infectedAreas.length > 0) {
+            infectedAreas.map(area => {
+                this.drawInfectedAreaCircle(area)
+            });
+        }
+
+        if (infectedCountries.length > 0) {
+            infectedCountries.map(country => {
+                const {
+                    active,
+                    countryInfo
+                } = country;
+                this.drawInfectedArea({lat: countryInfo.lat, lng: countryInfo.long}, active);
+            });
+        }
+    }
+
     fetchAreasByBounds = async(latBounds, lngBounds) => {
         await Axios.get(`http://localhost:4040/api/v1.0/areas?minLat=${latBounds.min}&maxLat=${latBounds.max}&minLng=${lngBounds.min}&maxLng=${lngBounds.max}`)
             .then(res => {
                 if(res.data.length > 0) {
                     console.log(res.data);
-                    res.data.forEach(area => {
-                        console.log(area);
-    
+                    res.data.forEach(area => {  
                         let temp = [...this.state.infectedAreas];
 
                         if (temp.length === 0) temp.push(area);
@@ -115,10 +74,12 @@ class Maps extends Component {
                         this.setState({
                             infectedAreas: temp
                         });
-
-                    })
+                    });
                 }
             })
+            .catch(err => {
+                console.error(err);
+            });
     }
 
     deleteCirclesOutOfBounds = (latBounds, lngBounds) => {
@@ -149,6 +110,7 @@ class Maps extends Component {
             }
             this.deleteCirclesOutOfBounds(latBounds, lngBounds);
             this.fetchAreasByBounds(latBounds, lngBounds)
+            // this.drawCircles();
         });
         googleMap.addListener('zoom_changed', () =>  {
             const latBounds = {
@@ -161,6 +123,7 @@ class Maps extends Component {
             }
             this.deleteCirclesOutOfBounds(latBounds, lngBounds);
             this.fetchAreasByBounds(latBounds, lngBounds);
+            // this.drawCircles();
         });
     }
         
@@ -186,13 +149,13 @@ class Maps extends Component {
     }
 
     drawInfectedArea = (area, population, country) => {
-        const radius = Math.sqrt(population) * 100;
+        const radius = Math.sqrt(population) * 1100;
         let circle =  new window.google.maps.Circle({
             strokeColor: '#FF0000',
-            strokeOpacity: 0.4,
-            strokeWeight: 2,
+            strokeOpacity: 0.05,
+            strokeWeight: 1,
             fillColor: '#FF0000',
-            fillOpacity: 0.35,
+            fillOpacity: 0.05,
             map: this.state.googleMap,
             center: area,
             radius: radius // r = 150m
@@ -219,19 +182,23 @@ class Maps extends Component {
     }
 
     fetchData = async() => {
-        await Axios.get('https://api.covid19api.com/summary')
+        let COVIDAPI = "https://corona.lmao.ninja/v2/countries/";
+        const COUNTRIES = ["Vietnam", "Germany", "USA", "FR", "Thailand", ];
+        
+        COUNTRIES.forEach((country) => {
+            COVIDAPI += country + "%2C";
+        });
+
+        await Axios.get(COVIDAPI)
             .then(results => {
                 console.log(results);
-                this.setState({
-                    global: results.data.Global,
-                    countries: results.data.Countries
-                }, () => {
-                    console.log(this.state.countries);
-                });
+                this.setState({infectedCountries: results.data}, () => console.log(this.state.infectedCountries));
             })
             .catch(err => {
                 console.error(err);
             });
+
+        this.drawCircles();
     }
 
     render() {
