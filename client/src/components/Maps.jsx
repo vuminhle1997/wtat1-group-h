@@ -2,51 +2,51 @@ import React, { Component, createRef } from 'react';
 import Axios from 'axios';
 class Maps extends Component {
     googleMapRef = React.createRef()
-    markedCountries = [
-        {
-            country: "United States of America",
-            lat: 38.171526,
-            lng: -101.211448
-        },
-        {
-            country: "Viet Nam",
-            lat: 21.164367,
-            lng: 105.238347
-        },
-        {
-            country: "Germany",
-            lat: 51.488458,
-            lng: 10.297640
-        },
-        {
-            country: "korea (south)",
-            lat: 36.604946,
-            lng: 127.948234
-        },
-        {
-            country: "France",
-            lat: 47.380787,
-            lng: 2.2890001
-        },
-        {
-            country: "Cuba",
-            lat: 22.179434,
-            lng: -79.843747
-        },
-        {
-            country: "peru",
-            lat: -8.064251,
-            lng: -76.109381
-        }, 
-    ];
+    // markedCountries = [
+    //     {
+    //         country: "United States of America",
+    //         lat: 38.171526,
+    //         lng: -101.211448
+    //     },
+    //     {
+    //         country: "Viet Nam",
+    //         lat: 21.164367,
+    //         lng: 105.238347
+    //     },
+    //     {
+    //         country: "Germany",
+    //         lat: 51.488458,
+    //         lng: 10.297640
+    //     },
+    //     {
+    //         country: "korea (south)",
+    //         lat: 36.604946,
+    //         lng: 127.948234
+    //     },
+    //     {
+    //         country: "France",
+    //         lat: 47.380787,
+    //         lng: 2.2890001
+    //     },
+    //     {
+    //         country: "Cuba",
+    //         lat: 22.179434,
+    //         lng: -79.843747
+    //     },
+    //     {
+    //         country: "peru",
+    //         lat: -8.064251,
+    //         lng: -76.109381
+    //     }, 
+    // ];
 
     constructor(props) {
         super(props);
         this.state = {
             googleMap: null,
-            global: {},
-            countries: [],
-            markOnMap: [],
+            // global: {},
+            // countries: [],
+            // markOnMap: [],
             infectedAreas: []
         }
     }
@@ -58,26 +58,32 @@ class Maps extends Component {
 
         googleMapScript.addEventListener('load',() => {
             this.state.googleMap = this.createGoogleMap()
-            this.props.markers.map(obj => {
-                this.createCircle(obj.position)
-            });
+            // this.props.markers.map(obj => {
+            //     this.createCircle(obj.position)
+            // });
             this.onMapChange();
-            this.fetchData();
+            // this.fetchData();
         });    
     }
 
     componentDidUpdate() {
-        if (this.state.countries.length > 0) {
-            this.markedCountries.forEach(obj => {
-                this.state.countries.some(country => {
-                    if (country.Country.toLowerCase() === obj.country.toLowerCase()) {
-                        this.state.markOnMap.push(country)
-                        this.drawInfectedArea({lat: obj.lat, lng: obj.lng}, country.TotalConfirmed, country);
-                    }
-                })
-                
+        const { infectedAreas } = this.state;
+        if (infectedAreas.length > 0) {
+            infectedAreas.map(area => {
+                this.drawInfectedAreaCircle(area)
             });
         }
+        // if (this.state.countries.length > 0) {
+        //     this.markedCountries.forEach(obj => {
+        //         this.state.countries.some(country => {
+        //             if (country.Country.toLowerCase() === obj.country.toLowerCase()) {
+        //                 this.state.markOnMap.push(country)
+        //                 this.drawInfectedArea({lat: obj.lat, lng: obj.lng}, country.TotalConfirmed, country);
+        //             }
+        //         })
+                
+        //     });
+        // }
     }
 
     createGoogleMap = () => {
@@ -95,17 +101,36 @@ class Maps extends Component {
             .then(res => {
                 if(res.data.length > 0) {
                     console.log(res.data);
-                    this.state.infectedAreas.some(IA => {
-                        
-                    })
                     res.data.forEach(area => {
                         console.log(area);
+    
+                        let temp = [...this.state.infectedAreas];
+
+                        if (temp.length === 0) temp.push(area);
+                        temp.some(ia => {
+                            if (area._id !== ia._id) {
+                                temp.push(area);
+                            } 
+                        });
                         this.setState({
-                            infectedAreas: this.state.infectedAreas.push(area)
-                        })
+                            infectedAreas: temp
+                        });
+
                     })
                 }
             })
+    }
+
+    deleteCirclesOutOfBounds = (latBounds, lngBounds) => {
+        let temp = [];
+        this.state.infectedAreas.forEach((ia, idx) => {
+            if ((ia.latitude >= latBounds.min && ia.latitude <= latBounds.max) &&
+                (ia.longitude >= lngBounds.min && ia.longitude <= lngBounds.max)) {
+                    temp.push(ia);
+            }
+        });
+
+        this.setState({infectedAreas: temp});
     }
 
     onMapChange = () => {
@@ -122,7 +147,7 @@ class Maps extends Component {
                 min: googleMap.getBounds().Ua.i,
                 max: googleMap.getBounds().Ua.j
             }
-
+            this.deleteCirclesOutOfBounds(latBounds, lngBounds);
             this.fetchAreasByBounds(latBounds, lngBounds)
         });
         googleMap.addListener('zoom_changed', () =>  {
@@ -134,7 +159,8 @@ class Maps extends Component {
                 min: googleMap.getBounds().Ua.i,
                 max: googleMap.getBounds().Ua.j
             }
-            this.fetchAreasByBounds(latBounds, lngBounds)
+            this.deleteCirclesOutOfBounds(latBounds, lngBounds);
+            this.fetchAreasByBounds(latBounds, lngBounds);
         });
     }
         
@@ -154,7 +180,7 @@ class Maps extends Component {
             fillOpacity: 0.35,
             map: this.state.googleMap,
             center: area,
-            radius: 15000 // r = 150m
+            radius: 15000000 // r = 150m
         }); 
         return circle;
     }
@@ -171,6 +197,24 @@ class Maps extends Component {
             center: area,
             radius: radius // r = 150m
         }); 
+        return circle;
+    }
+
+    drawInfectedAreaCircle = (area) => {
+        let circle =  new window.google.maps.Circle({
+            strokeColor: '#FF0000',
+            strokeOpacity: 0.4,
+            strokeWeight: 2,
+            fillColor: '#FF0000',
+            fillOpacity: 0.35,
+            map: this.state.googleMap,
+            center: {
+                lat: area.latitude,
+                lng: area.longitude
+            },
+            radius: 15000 // r = 150m
+        }); 
+        console.log(circle);
         return circle;
     }
 
