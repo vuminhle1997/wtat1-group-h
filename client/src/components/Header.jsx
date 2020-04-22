@@ -21,7 +21,7 @@ export default function Header() {
                 position="static"
             >
                 <div>
-                    WOW
+                    Corona Report
                 </div>
             </AppBar>
         </div>
