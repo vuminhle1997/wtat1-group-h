@@ -44,7 +44,6 @@ router.get('/', (req, res) => {
             console.error(err);
             return res.sendStatus(500);
         }
-        console.log(results)
         return res.status(200).json(results);
     });
 });
