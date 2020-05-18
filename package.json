@@ -10,8 +10,7 @@
     "dev": "nodemon ./main.js",
     "run-react-dev": "yarn --cwd ./client run start",
     "startDev": "concurrently \"yarn run dev\" \"yarn run run-react-dev\"",
-    "start": "node ./main.js",
-    "build": "yarn --cwd ./client run build"
+    "start": "node ./main.js"
   },
   "dependencies": {
     "axios": "^0.19.2",
