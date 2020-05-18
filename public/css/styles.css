@@ -1,0 +1,152 @@
+/* FONTS */
+/* Schrift: HTWBerlin by JÃ¼rgen Huber/Malte Herok */
+@font-face {
+    font-family: HTWBerlin;
+    font-style: normal;
+    font-weight: 400;
+    src: url("../fonts/HTWBerlinWeb-Regular.eot?alnev5");
+    src: url("../fonts/HTWBerlinWeb-Regular.eot?alnev5#iefix")
+        format("embedded-opentype"),
+      url("../fonts/HTWBerlinWeb-Regular.woff?alnev5") format("woff"),
+      url("../fonts/HTWBerlinWeb-Regular.ttf?alnev5") format("truetype");
+  }
+  @font-face {
+    font-family: HTWBerlin;
+    font-style: normal;
+    font-weight: 600;
+    src: url("../fonts/HTWBerlinWeb-Bold.eot?alnev5");
+    src: url("../fonts/HTWBerlinWeb-Bold.eot?alnev5#iefix")
+        format("embedded-opentype"),
+      url("../fonts/HTWBerlinWeb-Bold.woff?alnev5") format("woff"),
+      url("../fonts/HTWBerlinWeb-Bold.ttf?alnev5") format("truetype");
+  }
+  @font-face {
+    font-family: HTWBerlin;
+    font-style: italic;
+    font-weight: 400;
+    src: url("../fonts/HTWBerlinWeb-Italic.eot?alnev5");
+    src: url("../fonts/HTWBerlinWeb-Italic.eot?alnev5#iefix")
+        format("embedded-opentype"),
+      url("../fonts/HTWBerlinWeb-Italic.woff?alnev5") format("woff"),
+      url("../fonts/HTWBerlinWeb-Italic.ttf?alnev5") format("truetype");
+  }
+  @font-face {
+    font-family: HTWBerlin;
+    font-weight: 600;
+    font-style: italic;
+    src: url("../fonts/HTWBerlinWeb-BoldItalic.eot?alnev5");
+    src: url("../fonts/HTWBerlinWeb-BoldItalic.eot?alnev5#iefix")
+        format("embedded-opentype"),
+      url("../fonts/HTWBerlinWeb-BoldItalic.woff?alnev5") format("woff"),
+      url("../fonts/HTWBerlinWeb-BoldItalic.ttf?alnev5") format("truetype");
+  }
+  @font-face {
+    font-family: "htwicons";
+    src: url("../fonts/htwicons.eot?r3x902");
+    src: url("../fonts/htwicons.eot?r3x902#iefix") format("embedded-opentype"),
+      url("../fonts/htwicons.ttf?r3x902") format("truetype"),
+      url("../fonts/htwicons.woff?r3x902") format("woff"),
+      url("../fonts/htwicons.svg?r3x902#htwicons") format("svg");
+    font-weight: normal;
+    font-style: normal;
+  }
+  @import url("https://fonts.googleapis.com/css?family=Anonymous+Pro&display=swap");
+  
+  
+  /* GLOBAL */
+  * {
+    font-family: "HTWBerlin";
+  }
+  label {
+    font-weight: bold;
+  }
+  textarea, input {
+      font-family: "Anonymous Pro", monospace !important;
+  }
+  textarea {
+    margin-bottom: 0.5em;
+    width: 100%;
+    height: 70px;
+    font-size: 105%;
+    resize: none;
+    overflow: auto;
+  }
+  footer {
+    color: white;
+    padding: 1em;
+  }
+  
+  
+  /* HTW LOGO */
+  .icon {
+    color: #76b900;
+    font-family: "htwicons" !important;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    letter-spacing: 0;
+    -webkit-font-feature-settings: "liga";
+    -moz-font-feature-settings: "liga=1";
+    -moz-font-feature-settings: "liga";
+    -ms-font-feature-settings: "liga" 1;
+    font-feature-settings: "liga";
+    -webkit-font-variant-ligatures: discretionary-ligatures;
+    font-variant-ligatures: discretionary-ligatures;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    box-sizing: border-box;
+    cursor: pointer;
+    text-rendering: optimizeLegibility;
+  }
+  .icon-htw-logo:before {
+    content: "\e663";
+  }
+  .icon-stg-IMI {
+    margin-left: 0.5em;
+    padding-left: 0.5em;
+    border-left: 0.08em solid #76b900;
+  }
+  .icon-stg-IMI:before {
+    content: "\e63f";
+  }
+  
+  
+  /* HTW COLOR / THEMES */
+  .htw_theme_green {
+    background-color: #76b900;
+    color: white;
+  }
+  .htw_theme_blue {
+    background-color: #0082D1;
+    color: white;
+  }
+  .htw_theme_orange {
+    background-color: #FF5F00;
+    color: white;
+  }
+  .htw_theme_grey {
+    background-color: #AFAFAF;
+    color: white;
+  }
+  
+  
+  /* MAIN MENU / NAVIGATION */
+  .nav-link {
+    cursor: pointer;
+  }
+  
+  
+  /* PAGE ITEMS */
+  .card {
+    margin: 1.5em 0;
+  }
+  .card-header {
+    font-weight: bold;
+    font-size: 110%;
+  }
+  .input-group-text {
+      width: 200px;
+  }
+  

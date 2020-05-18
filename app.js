@@ -3,8 +3,6 @@ const fetch = require('node-fetch');
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
-const PORT = process.env.PORT;
-const ENV = process.env.NODE_ENV === 'production';
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const fs = require('fs');
@@ -13,6 +11,12 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 
 const app = new express();
+
+app.set('view engine', 'ejs');
+app.get('/', function(req, res) {
+    res.render('pages/index.ejs');
+});
+app.use(express.static(__dirname + '/public'));
 
 // middle-wares e.g. "body-parser"
 app.use(cors());
@@ -24,7 +28,7 @@ app.use(morgan('combined', {
 app.use(express.static(path.join(__dirname, 'public')));
 mongoose.connect(process.env.MONGO_URL, {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true}, (err) => {
     if (err) return console.log(err)
-    console.log(`App is connected to DB`);
+    console.log(`App is connected to DB, \n ${process.env.MONGO_URL}`);
 });
 
 require('./models/InfectedArea');
@@ -45,11 +49,11 @@ io.on('connection', function(socket) {
         .then(data => {
             const COVIDGLOBAL = data.Global;
             console.log(`Global COVID-19 REPORT`, COVIDGLOBAL);
-            io.emit('covid notification', COVIDGLOBAL)
-        })
+            io.emit('covid notification', COVIDGLOBAL);
+        });
     socket.on('disconnect', () => {
-        console.log(`Client disconnected... ${socket.id}`)
-    })  
+        console.log(`Client disconnected... ${socket.id}`);
+    });
 });
 
 // every day on 18:00, check the total count of covid infected people around the world
@@ -60,7 +64,6 @@ setInterval(() => {
         fetch('https://api.covid19api.com/summary')
             .then(res => res.json())
             .then(data => {
-                console.log();
                 const COVIDGLOBAL = data.Global;
                 console.log(`Global COVID-19 REPORT`, COVIDGLOBAL);
                 io.emit('covid daily report', COVIDGLOBAL);
@@ -69,7 +72,8 @@ setInterval(() => {
 }, hourInterval);
 
 // starts the web app
-server.listen(PORT, () => {
-    console.log('Server listening on PORT: > ' + PORT);
-});
+// server.listen(PORT, () => {
+//     console.log('Server listening on PORT: > ' + PORT);
+// });
 
+module.exports = server;

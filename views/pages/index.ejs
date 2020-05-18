@@ -1,0 +1,332 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="/css/styles.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.ico">
+    <title>Corona report - List of reports</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top">
+      <a class="navbar-brand" href="https://imi-bachelor.htw-berlin.de/" target="_blank">
+        <i class="icon icon-htw-logo" title="HTW Berlin - Hochschule für Technik und Wirtschaft Berlin"></i>
+        <i class="icon icon-stg-IMI" title="Piktogramm von Internationaler Studiengang Medieninformatik (Bachelor)"></i>
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="collapsibleNavbar">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="http://home.htw-berlin.de/~kleinen/classes/ss2020/wtat1/schedule/" target="_blank">Schedule</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="http://home.htw-berlin.de/~kleinen/classes/ss2020/wtat1/topics/topic-05-mongo/" target="_blank">Topic</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="https://github.com/ptmanh92/sprint-03">GitHub / Download</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="modal" data-target="#about_us_box">About us</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="container" style="margin: 100px auto 80px auto; min-height: 600px;">
+        <h2>List of reports</h2>
+        <div class="card">
+            <ul class="list-group" id="list_of_reports">
+            </ul>
+        </div>
+        <br>
+        <h2>Add new report</h2>
+        <div class="card">
+            <div class="card-body">
+                <div class="input-group mb-1 input-group-sm">
+                    <div class="input-group-prepend"><span class="input-group-text">User ID</span></div>
+                    <input type="number" class="form-control" id="user_id">
+                </div>
+                <div class="input-group mb-1 input-group-sm">
+                    <div class="input-group-prepend"><span class="input-group-text">Latitude</span></div>
+                    <input type="text" class="form-control" id="latitude">
+                </div>
+                <div class="input-group mb-1 input-group-sm">
+                    <div class="input-group-prepend"><span class="input-group-text">Longitude</span></div>
+                    <input type="text" class="form-control" id="longitude">
+                </div>
+                <div class="input-group mb-1 input-group-sm">
+                    <div class="input-group-prepend"><span class="input-group-text">Symptoms</span></div>
+                    <input type="text" class="form-control" id="symptoms">
+                </div>
+                <div class="input-group mb-1 input-group-sm">
+                    <div class="input-group-prepend"><span class="input-group-text">Precondition</span></div>
+                    <select class="form-control" id="precondition">
+                        <option value="false">no</option>
+                        <option value="true">yes</option>
+                    </select>
+                </div>
+                <div class="input-group mb-1 input-group-sm">
+                    <div class="input-group-prepend"><span class="input-group-text">Came from infected area</span></div>
+                    <select class="form-control" id="infected_area">
+                        <option value="false">no</option>
+                        <option value="true">yes</option>
+                    </select>
+                </div>
+                <div class="input-group mb-1 input-group-sm">
+                    <div class="input-group-prepend"><span class="input-group-text">Contacted with infected person</span></div>
+                    <select class="form-control" id="infected_person">
+                        <option value="false">no</option>
+                        <option value="true">yes</option>
+                    </select>
+                </div>
+                <div class="input-group mb-1 input-group-sm">
+                    <div class="input-group-prepend"><span class="input-group-text">Notes / Details</span></div>
+                    <textarea class="form-control" name="details" id="details"></textarea>
+                </div>
+                <div class="input-group mb-1 input-group-sm">
+                    <div class="input-group-prepend"><span class="input-group-text">Status</span></div>
+                    <select class="form-control" id="status">
+                        <option value="sent">sent</option>
+                        <option value="processing">processing</option>
+                        <option value="done">done</option>
+                    </select>
+                </div>
+            </div>
+            <div class="card-footer text-right">
+                <button id="insert_btn" class="btn htw_theme_green">Insert report</button>
+            </div>
+        </div>
+
+        <!-- The notification box -->
+        <div class="modal fade" id="confirm_box" style="display: none;" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <!-- Modal body -->
+                    <div id="notice_txt" class="modal-body">Are you sure?</div>
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn htw_theme_blue" data-dismiss="modal" id="yes_btn">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- The error box -->
+        <div class="modal fade" id="error_box" style="display: none;" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <!-- Modal body -->
+                    <div id="notice_txt" class="modal-body">Error occured. Please try again.</div>
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- The about box -->
+        <div class="modal fade" id="about_us_box">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">About us</h4>
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body">                    
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <th rowspan="3">Group members / Students</th>
+                                <td>The Manh Phan</td>
+                            </tr>
+                            <tr>
+                                <td>Cong Nguyen-Dinh</td>
+                            </tr>
+                            <tr>
+                                <td>Vu Minh Le</td>
+                            </tr>
+                            <tr>
+                                <th>University</th>
+                                <td>University of Applied Sciences Berlin</td>
+                            </tr>
+                            <tr>
+                                <th>Course of study</th>
+                                <td>International Media Computing</td>
+                            </tr>
+                            <tr>
+                                <th>Course</th>
+                                <td>WTAT1 Web Technology</td>
+                            </tr>
+                            <tr>
+                                <th>Course instructors</th>
+                                <td>Prof. Dr. Barne Kleinen</td>
+                            </tr>
+                            <tr>
+                                <th>Sprint</th>
+                                <td>03 - Persistence with Mongo</td>
+                            </tr>
+                            <tr>
+                                <th>Date</th>
+                                <td>10.05.2020</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let fetchingData;
+        let list_of_reports = document.getElementById("list_of_reports");
+        var insert_btn = document.getElementById("insert_btn");
+        var yes_btn = document.getElementById("yes_btn");
+        let light_bkgr = false;
+
+        function switch_bkgr() {
+            let output;
+            if (light_bkgr) {
+                output = " bg-light";
+                light_bkgr = false;
+            } else {
+                output = "";
+                light_bkgr = true;
+            }
+            return output;
+        }
+
+        function createReport(data_record) {
+            // Create li item
+            let li_report = document.createElement("li");
+            li_report.setAttribute("class", "list-group-item" + switch_bkgr());
+            list_of_reports.appendChild(li_report);
+
+            let row_wrapper = document.createElement("div");
+            row_wrapper.setAttribute("class", "row");
+            li_report.appendChild(row_wrapper);
+
+            let item_title = document.createElement("div");
+            item_title.setAttribute("class", "col-sm-10");
+            item_title.innerText = "Report of user " + data_record.submitter;
+            row_wrapper.appendChild(item_title);
+
+            let div_btn = document.createElement("div");
+            div_btn.setAttribute("class", "col-sm-2 text-right");
+            row_wrapper.appendChild(div_btn);
+
+            let collapse_btn = document.createElement("button");
+            collapse_btn.setAttribute("class", "btn btn-info");
+            collapse_btn.setAttribute("data-toggle", "collapse");
+            collapse_btn.setAttribute("data-target", "#module" + data_record._id);
+            div_btn.appendChild(collapse_btn);
+
+            let btn_icon = document.createElement("i");
+            btn_icon.setAttribute("class", "fas fa-info-circle");
+            collapse_btn.appendChild(btn_icon);
+
+            // Create detail collapse box
+            let detail_box = document.createElement("div");
+            detail_box.setAttribute("id", "module" + data_record._id);
+            detail_box.setAttribute("class", "collapse");
+            li_report.appendChild(detail_box);
+
+            let hr_tag = document.createElement("hr");
+            detail_box.appendChild(hr_tag);
+
+            let item_content = document.createElement("p");
+            let br_tag = "<br>";
+            let record_date = new Date(data_record.date);
+            let item_date = record_date.getDate() + "." + (record_date.getMonth() + 1) + "." + record_date.getFullYear();
+            let item_precondition = data_record.precondition ? "yes" : "no";
+            let item_infected_area = data_record.infected_area ? "yes" : "no";
+            let item_infected_person = data_record.infected_person ? "yes" : "no";
+            item_content.innerHTML = "Date: " + item_date + br_tag + 
+                                     "Latitude: " + data_record.latitude + br_tag + 
+                                     "Longitude: " + data_record.longitude + br_tag + 
+                                     "Symptoms: " + data_record.symptoms + br_tag + 
+                                     "Precondition: " + item_precondition + br_tag + 
+                                     "Came from infected area: " + item_infected_area + br_tag +
+                                     "Contacted with infected person: " + item_infected_person + br_tag + 
+                                     "Notes: " + data_record.details + br_tag + 
+                                     "Status: " + data_record.status + br_tag;
+            detail_box.appendChild(item_content);
+        }
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            await fetch('/api/v1.0/reports/')
+            .then(res => {
+                return res.json();
+            })
+            .then((data) => {
+                fetchingData = data.reports;
+            });
+
+            if (fetchingData) {
+                for (data of fetchingData) {
+                    createReport(data);
+                }
+            }
+        });
+
+        insert_btn.addEventListener("click", function() {
+            $("#confirm_box").modal();
+        });
+
+        yes_btn.addEventListener("click", async function() {
+            let new_data = {
+                submitter: document.getElementById("user_id").value,
+                latitude: document.getElementById("latitude").value,
+                longitude: document.getElementById("longitude").value,
+                symptoms: document.getElementById("symptoms").value,
+                precondition: document.getElementById("precondition").value,
+                infected_area: document.getElementById("infected_area").value,
+                infected_person: document.getElementById("infected_person").value,
+                details: document.getElementById("details").value,
+                status: document.getElementById("status").value
+            }
+
+            const options = {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(new_data)
+            }
+
+            try {
+                const fetchResponse = await fetch('/api/v1.0/reports/fakeReport', options);
+                const data = await fetchResponse.json();
+                console.log(data);
+                if (data) {
+                    location.reload();
+                }
+                return data;
+            } catch(error) {
+                $("#error_box").modal();
+                return error;
+            }
+        });
+    </script>
+
+    <footer class="bg-dark navbar-dark text-center">
+        Course: WTAT1 Web Technology | SoSe2020 | 10.05.2020<br>
+        © 2020 The Manh Phan &amp; Cong Nguyen-Dinh &amp; Vu Minh Le
+    </footer>
+</body>
+</html>

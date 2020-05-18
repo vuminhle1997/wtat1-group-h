@@ -44,7 +44,8 @@ let ReportSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        required: false
+        required: false,
+        default: 'sent'
     }
 }, {timestamps: true});
 

@@ -44,10 +44,22 @@ router.get('/', (req, res) => {
                 console.error(err);
                 return res.sendStatus(500);
             }
-            return res.json(results.map(obj => {
+            return res.json({reports: results.map(obj => {
                 return obj.depopulate('submitter');
-            }));
+            })});
         });
+});
+
+router.get('/user', auth.optional, (req, res) => {
+    const id = req.query.id;
+    if (id !== undefined) {
+        Report.find({submitter: id}, (err, docs) => {
+            if (err) return res.status(500).json({mes: 'Error'})
+            return res.status(200).json({reports: docs});
+        });
+    } else {
+        return res.status(500).json({mes: 'User ID not valid'});
+    }
 });
 
 router.get('/report', auth.required, (req, res) => {
@@ -69,6 +81,54 @@ router.get('/report', auth.required, (req, res) => {
     } else {
         return res.sendStatus(400);
     }
+});
+
+router.post('/fakeReport', (req, res) => {
+    const {
+        submitter,
+        latitude,
+        longitude,
+        symptoms,
+        precondition,
+        infected_area,
+        infected_person,
+        details,
+        status,
+    } = req.body;
+
+    const report = new Report();
+    report.submitter = "5e9f214aa93ab868549d26e0";
+    report.date = new Date();
+    report.latitude = latitude;
+    report.longitude = longitude;
+    report.symptoms = symptoms;
+    report.precondition = precondition;
+    report.infected_area = infected_area;
+    report.infected_person = infected_person;
+    report.person_from_infected = true;
+    report.details = details;
+    report.status = status;
+
+    report.save({validateBeforeSave: true}, (err, re) => {
+        if (err) {
+            console.error({err});
+            return res.status(500).json({mes: 'Could not save report'});
+        } else {
+            let infectedArea = new InfectedArea();
+
+            infectedArea.report = re;
+            infectedArea.longitude = longitude;
+            infectedArea.latitude = latitude;
+            infectedArea.active = true;
+            infectedArea.save({ validateBeforeSave: true }, (err, ia) => {
+                if (err) {
+                    console.error(err);
+                    return res.status(500).json({mes: 'Could not store IA . . .'});
+                }
+                return res.status(200).json({report: re.depopulate('submitter'), infectedArea: ia});
+            });
+        }
+    });
 });
 
 router.post('/report', auth.required, (req, res) => {
