@@ -4,3 +4,4 @@
 /.vscode
 .log
 yarn-error.log
+yarn.lock
