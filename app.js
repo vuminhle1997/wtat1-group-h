@@ -9,6 +9,7 @@ const fs = require('fs');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
+const helmet = require('helmet');
 
 const app = new express();
 
@@ -19,6 +20,7 @@ app.get('/', function(req, res) {
 app.use(express.static(__dirname + '/public'));
 
 // middle-wares e.g. "body-parser"
+app.use(helmet());
 app.use(cors());
 app.use(bodyParser.json());
 app.use(cookieParser());
