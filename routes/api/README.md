@@ -1,7 +1,7 @@
 # Routes
 
 ## Endpoints
-```yarn
+```console
     /api/verify
     /api/v1.0/
 ```

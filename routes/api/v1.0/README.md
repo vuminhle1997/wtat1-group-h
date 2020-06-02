@@ -1,7 +1,7 @@
 # Routes
 
 ## Endpoints
-```yarn
+```console
     /api/v1.0/users/user
     /api/v1.0/reports/report
     /api/v1.0/reports/positive

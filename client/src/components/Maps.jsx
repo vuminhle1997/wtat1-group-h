@@ -58,7 +58,7 @@ class Maps extends Component {
     }
 
     fetchAreasByBounds = async(latBounds, lngBounds) => {
-        await Axios.get(`http://localhost:4040/api/v1.0/areas?minLat=${latBounds.min}&maxLat=${latBounds.max}&minLng=${lngBounds.min}&maxLng=${lngBounds.max}`)
+        await Axios.get(`http://localhost:5000/api/v1.0/areas?minLat=${latBounds.min}&maxLat=${latBounds.max}&minLng=${lngBounds.min}&maxLng=${lngBounds.max}`)
             .then(res => {
                 if(res.data.length > 0) {
                     console.log(res.data);
