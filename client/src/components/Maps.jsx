@@ -14,7 +14,7 @@ class Maps extends Component {
 
     componentDidMount() {
         const googleMapScript = document.createElement('script');
-        googleMapScript.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyDDBbsuWC7X8v2Xxa92Vs15Xb-S4wENnxU&callback=initMap`;
+        googleMapScript.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyDDBbsuWC7X8v2Xxa92Vs15Xb-S4wENnxU`;
         window.document.body.appendChild(googleMapScript);
 
         googleMapScript.addEventListener('load',() => {
@@ -63,14 +63,10 @@ class Maps extends Component {
                 if(res.data.length > 0) {
                     console.log(res.data);
                     res.data.forEach(area => {  
-                        let temp = [...this.state.infectedAreas];
+                        let temp = [...this.state.infectedAreas];                     
 
-                        if (temp.length === 0) temp.push(area);
-                        temp.some(ia => {
-                            if (area._id !== ia._id) {
-                                temp.push(area);
-                            } 
-                        });
+                        const found = temp.some(ia => ia._id === area._id);
+                        if (!found) temp.push(area);
                         this.setState({
                             infectedAreas: temp
                         });
@@ -155,7 +151,7 @@ class Maps extends Component {
             strokeOpacity: 0.05,
             strokeWeight: 1,
             fillColor: '#FF0000',
-            fillOpacity: 0.05,
+            fillOpacity: 0.35,
             map: this.state.googleMap,
             center: area,
             radius: radius // r = 150m

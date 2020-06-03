@@ -90,7 +90,7 @@ function getReports(req, res) {
                 console.error(err);
                 return res.sendStatus(500);
             }
-            return res.json({reports: results.map(obj => {
+            return res.status(200).json({reports: results.map(obj => {
                 return obj.depopulate('submitter');
             })});
     });

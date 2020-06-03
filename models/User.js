@@ -21,10 +21,10 @@ let UserSchema = new mongoose.Schema({
     },
     gender: {
         type: String,
-        enum: ['M','F']
+        enum: ['Male','Female', 'Other']
     },
     dob: {
-        type: Date,
+        type: String,
         required: false
     },
     personalId: {

@@ -10,6 +10,8 @@ router.get('/', auth.required, userController.getUsers);
 
 router.get('/user', auth.optional, userController.getUser);
 
+router.post('/refresh', auth.required, userController.verifyAndRefresh);
+
 /**
  * Registrates an user into the DB.
  * ENDPOINT: /api/v1.0/users/create

@@ -6,6 +6,9 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const secret = require('../config').secret;
 
+const nodemailer = require('nodemailer');
+const getTokenFromHeader = require('../config/helper').getTokenFromHeader;
+
 /**
  * This functions creates a credential token for the User.
  * The token is necessary for the Header Body "Bearer" and the backend of this app
@@ -98,6 +101,18 @@ async function sendVerificationMail(firstname, lastname, email, hash, id) {
     console.log("Preview URL: %s", nodemailer.getTestMessageUrl(sender));
 }
 
+async function verifyAndRefresh(req, res) {
+    const token = getTokenFromHeader(req);
+    const claims = jwt.verify(token, secret)
+    if (!claims) {
+        return res.status(401).json({mes: "Wrong"});
+    } else {
+        const newToken = await createJWTToken(claims.id, claims.username);
+        return res.status(200).json({token: newToken, claims})
+    }
+    
+}
+
 function getUsers(req, res) {
     let query = {};
     const limit = 20;
@@ -183,12 +198,12 @@ async function createUser(req, res) {
                         .catch(console.error);
         
                     const token = await createJWTToken(doc._id, doc.username);
-                    return res.json({
+                    return res.status(200).json({
                         mes: 'You succesfully registrrated . . .',
                         token: token
                     });
                 }).catch((err) => {
-                    return res.json(err);
+                    return res.status(500).json(err);
                 });
             });
         });
@@ -305,5 +320,6 @@ module.exports = {
     createUser: createUser,
     loginUser: loginUser,
     editProfile: editProfile,
-    deleteProfile: deleteProfile
+    deleteProfile: deleteProfile,
+    verifyAndRefresh: verifyAndRefresh
 }
