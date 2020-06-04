@@ -1,44 +1,21 @@
 import React from 'react'
+import Header from '../Header'
+import Footer from '../Footer'
 import { Container, FormGroup, TextField, Grid, FormControl, InputLabel, Select, MenuItem, Button, Typography } from '@material-ui/core'
 import { useState } from 'react';
-
-import { useHistory } from 'react-router-dom';
 import { useEffect } from 'react';
 import Axios from 'axios';
 import jsCookie from 'js-cookie';
 
-export function range(start, end) {
-    var ans = [];
-    for (let i = start; i <= end; i++) {
-        ans.push(i);
-    }
-    return ans;
-}
+import { days, months, years } from './RegisterPage';
 
-export const days = range(1, 31);
-export const months = range(1, 12);
-export const years = range(1970,  2020);
-
-export default function RegisterPage({
-    setAppState
-}) {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition((position) => {
-            setLat(position.coords.latitude)
-            setLng(position.coords.longitude);
-        })
-    }
-    const history = useHistory();
-
-    const [ lat, setLat ] = useState(0);
-    const [ lng, setLng ] = useState(0);
-
+export default function ProfilePage() {
     const [ username, setUsername ] = useState('');
     const [ firstname, setFirstname] = useState('');
     const [ lastname, setLastname ] = useState('');
     const [ email, setEmail ] = useState('');
     const [ password, setPassword ] = useState('');
-    const [ confirmPassword, setConfirmPassword ] = useState('');
+    const [ newPassword, setConfirmPassword ] = useState('');
     const [ day, setDay ] = useState(1);
     const [ month, setMonth ] = useState(1);
     const [ year, setYear ] = useState(2020);
@@ -46,65 +23,93 @@ export default function RegisterPage({
     const [ personalId, setPersonalId ] = useState('');
     const [ address, setAddress ] = useState('');
     const [ phonenumber, setPhoneNumber ] = useState(null);
-
+    
     const [ error, setError ] = useState(false);
     const [ success, setSuccess ] = useState(false);
+
+    useEffect(() => {
+        fetchProfileData()
+    }, [])
 
     useEffect(() => {
 
     }, [error, success]);
 
-    const registerUser = async() => {
-        if (password === confirmPassword && password.length > 8) {
-            let _day, _month;
-            (day >= 1 && day < 10) ? _day = `0${day}` : _day = day;
-            (month >= 1 && month < 10) ? _month = `0${month}`: _month = month;
-            const DOB = `${_day}/${_month}/${year}`;
-
-            const body = {
-                user: {
-                    username,
-                    password,
-                    firstname,
-                    lastname,
-                    gender,
-                    dob: DOB,
-                    personalId,
-                    email,
-                    address,
-                    phonenumber,
-                    latitude: lat,
-                    longitude: lng,
-                    role: "User"
-                }
+    const fetchProfileData = async() => {
+        await Axios.get('http://localhost:5000/api/v1.0/users/profile', {
+            headers: {
+                Authorization: `Bearer ${jsCookie.get('authToken')}`
             }
+        }).then(res => {
+            console.log(res);
+        })
+        .catch(err => {
+            console.log(err);
+        })
+    }
 
-            await Axios.post(`http://localhost:5000/api/v1.0/users/create`, body)
-            .then(res => {
-                if (res.status === 200) {
-                    // redirect and store token as cookie
-                    jsCookie.set('authToken', res.data.token);
-                    setSuccess(true);
-                    setError(false);
-                    setAppState(1);
-                    setTimeout(() => history.push('/'), 1500);
-                }
-            })
-            .catch(err => {
-                setError(true);
-                setSuccess(false);
-            });
+    const changePassword = async() => {
+        const body = {
+            user: {
+                password: password, 
+                newPassword: newPassword
+            }
         }
-        
+        const config = {
+            headers: {
+                Authorization: `Bearer ${jsCookie.get('authToken')}`
+            }
+        }
+        await Axios.put('http://localhost:5000/api/v1.0/users/changePassword', body, config)
+        .then(res => {
+            console.log(res);
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    }
+
+    const changeProfileData = async() => {
+        let _day, _month;
+        (day >= 1 && day < 10) ? _day = `0${day}` : _day = day;
+        (month >= 1 && month < 10) ? _month = `0${month}` : _month = month;
+        const newDate = `${_day}/${_month}/${year}`;
+        const body = {
+            user: {
+                username: username,
+                firstname: firstname,
+                lastname: lastname,
+                email: email,
+                phonenumber: phonenumber,
+                address: address,
+                personalId: personalId,
+                dob: newDate
+            }
+        }
+        const config = {
+            headers: {
+                Authorization: `Bearer ${jsCookie.get('authToken')}`
+            }
+        }
+        await Axios.put('http://localhost:5000/api/v1.0/users/editProfile', body, config)
+        .then(res => {
+            console.log(res);
+        })
+        .catch(err => {
+            console.log(err);
+        });
     }
 
     return (
         <>
-        <Container>
+        <Header/>
+        <main>
+            <Container>
             <FormGroup>
                 <TextField
                     label="Username *"
                     variant="outlined"
+                    
                     onChange={e => setUsername(e.target.value)}
                 />
                 <Grid container spacing={2}>
@@ -198,13 +203,6 @@ export default function RegisterPage({
                     variant="outlined"
                     onChange={e => setPhoneNumber(e.target.value)}
                 />
-                <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={registerUser}
-                >
-                    Register
-                </Button>
             </FormGroup>
             {
                 error ? <Typography variant="body2">Something went wrong</Typography> : ''
@@ -212,7 +210,9 @@ export default function RegisterPage({
             {
                 success ? <Typography variant="body1">Successful registed. You will be redirected . . .</Typography>: ''
             }
-        </Container>
+            </Container>
+        </main>
+        <Footer/>
         </>
     )
 }

@@ -1,7 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import logo from './logo.svg';
-import AppBar from './components/Header';
-import Maps from './components/Maps';
 import { BrowserRouter as Router, Link, Switch, Route } from 'react-router-dom';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import LandingPage from './components/screens/LandingPage';
@@ -10,6 +7,7 @@ import './App.css'
 import jsCookie from 'js-cookie';
 import Dashboard from './components/screens/Dashboard';
 import Axios from 'axios';
+import ProfilePage from './components/screens/ProfilePage';
 
 const themeType = jsCookie.get('themeType') === 'dark' ? 'dark' : 'light' ;
 
@@ -49,6 +47,11 @@ function App() {
     }
   }
 
+  const handleLogout = async() => {
+    setAppState(0);
+    await jsCookie.remove('authToken')
+  }
+
   return (
     <div>
       <ThemeProvider theme={themeInstance}>
@@ -59,7 +62,9 @@ function App() {
                 appState === 0 ? <LandingPage /> : <Dashboard appState={appState}/>
               }
             </Route>
-            
+            <Route path="/profile">
+              <ProfilePage />
+            </Route>
             <Route path="/register">
               <RegisterPage setAppState={setAppState}/>
             </Route>

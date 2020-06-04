@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 let User = mongoose.model('User');
+let Report = mongoose.model('Report');
+let IA = mongoose.model('InfectedArea');
 
 const saltRound = 10;
 const bcrypt = require('bcrypt');
@@ -134,6 +136,18 @@ function getUsers(req, res) {
 function getUser(req, res) {
     const id = req.query.id;
     User.findById(id, (err, doc) => {
+        if (err) {
+            console.error(err);
+            return res.status(404);
+        } 
+        if (doc) return res.json(doc.depopulate('password'));
+
+        return res.status(404).json({mes:"not found"});
+    });
+}
+
+function getLoggedUser(req, res) {
+    User.findById(req.payload.id, (err, doc) => {
         if (err) {
             console.error(err);
             return res.status(404);
@@ -302,8 +316,22 @@ function deleteProfile(req, res) {
         bcrypt.compare(req.body.user.password, doc.password, async(err, result) => {
             if (err) throw new Error(err);
             if (result === true) {
+                await Report.find({submitter: mongoose.Types.ObjectId(id)}, (err, reso) => {
+                    if (err) {
+                        console.log(err);
+                        return res.status(500).json(err);
+                    }
+                    if (reso) {
+                        reso.forEach(async (docReport) => {
+                            await IA.findByIdAndDelete(doc._id);
+                            await docReport.remove();
+                        });
+                    }
+                })
+
                 await doc.remove();
-                return res.sendStatus(200);
+
+                return res.status(200).json({mes: "Deleted profile and all related stuffs"})
             } else {
                 return res.sendStatus(400);
             }
@@ -321,5 +349,6 @@ module.exports = {
     loginUser: loginUser,
     editProfile: editProfile,
     deleteProfile: deleteProfile,
-    verifyAndRefresh: verifyAndRefresh
+    verifyAndRefresh: verifyAndRefresh,
+    getLoggedUser: getLoggedUser
 }

@@ -2,6 +2,7 @@ import React from 'react'
 import { AppBar, makeStyles, Toolbar, IconButton, Typography, Menu, MenuItem } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -17,6 +18,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Header() {
     const classes = useStyles();
+    const history = useHistory();
+
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
 
@@ -69,7 +72,9 @@ export default function Header() {
                         open={open}
                         onClose={handleClose}
                     >
-                        <MenuItem>Profile</MenuItem>
+                        <MenuItem onClick={() => {
+                            history.push('/profile');
+                        }}>Profile</MenuItem>
                         <MenuItem>Logout</MenuItem>
                     </Menu>
                 </Toolbar>

@@ -8,6 +8,7 @@ import { Container, Fab, makeStyles } from '@material-ui/core';
 import Maps from '../Maps';
 import AddIcon from '@material-ui/icons/Add';
 import ReportForm from './ReportForm';
+import { useHistory } from 'react-router-dom';
 
 
 const useStyles = makeStyles({
@@ -23,6 +24,7 @@ export default function Dashboard({
     appState
 }) {
     const classes = useStyles();
+    const history = useHistory();
 
     const [ reports, setReports ] = useState(null);
     const [ offset, setOffset ] = useState(0);
