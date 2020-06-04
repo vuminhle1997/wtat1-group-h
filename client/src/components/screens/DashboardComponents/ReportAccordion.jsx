@@ -1,7 +1,14 @@
 import React from 'react'
-import { ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails, Typography } from '@material-ui/core'
+import { ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails, Typography, makeStyles } from '@material-ui/core';
+
+const useStlyes =  makeStyles({
+    root: {
+        display: 'block'
+    }
+});
 
 export default function ReportAccordion({report, index}) {
+    const classes = useStlyes();
     return (
         <ExpansionPanel key={report._id}>
             <ExpansionPanelSummary
@@ -9,15 +16,14 @@ export default function ReportAccordion({report, index}) {
             >
                 <Typography>Report of User: {`${report.submitter}`}</Typography>
             </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
-                <p><b>Submitted on: </b>{report.createdAt}</p><br/>
-                <p><b>Diagnosed on: </b>{report.date}</p><br/>
-                <p><b>Details: </b>{report.details}</p><br/>
-                <p><b>Precondition: </b>{report.precondition}</p><br/>
-                <p><b>Symptoms: </b>{report.symptoms}</p><br/>
-                <p><b>From infected area:</b>{report.infected_area ? 'yes': 'no' }</p><br/>
-                <p><b>Infected from a person: </b>{report.person_from_infected ? 'yes' : 'no'}</p><br/>
-                <p><b>Infected: </b> {report.infected_person ? 'yes': 'no'}</p>
+            <ExpansionPanelDetails className={classes.root}>
+                <Typography variant="caption">Submitted on: <Typography variant="body1">{report.date}</Typography></Typography>
+                <Typography variant="caption">Details: <Typography variant="body1">{report.details}</Typography></Typography>
+                <Typography variant="caption">Precondition: <Typography variant="body1">{report.precondition}</Typography></Typography>
+                <Typography variant="caption">Symptoms: <Typography variant="body1">{report.symptoms}</Typography></Typography>
+                <Typography variant="caption">From infected area:<Typography variant="body1">{report.infected_area ? 'yes': 'no' }</Typography></Typography>
+                <Typography variant="caption">Infected from a person: <Typography variant="body1">{report.person_from_infected ? 'yes' : 'no'}</Typography></Typography>
+                <Typography variant="caption">Infected: <Typography variant="body1">{report.infected_person ? 'yes': 'no'}</Typography></Typography>
             </ExpansionPanelDetails>
         </ExpansionPanel>
     )

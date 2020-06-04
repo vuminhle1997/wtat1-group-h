@@ -5,6 +5,7 @@
   min-width: 100vw !important;
   max-width: 100vw !important;
   margin: 0 auto;
+  padding: 0 !important;
 }
 
 #map > div {

@@ -160,7 +160,7 @@ function createReport(req, res) {
                 report.symptoms = symptoms;
                 report.precondition = precondition;
                 report.infected_area = infected_area;
-                report.infected_person = infected_person;
+                report.infected_person = true;
                 report.person_from_infected = person_from_infected;
                 report.details = details;
 

@@ -77,7 +77,6 @@ export default function RegisterPage({
 
             await Axios.post(`http://localhost:5000/api/v1.0/users/create`, body)
             .then(res => {
-                console.log(res)
                 if (res.status === 200) {
                     // redirect and store token as cookie
                     jsCookie.set('authToken', res.data.token);
@@ -88,7 +87,6 @@ export default function RegisterPage({
                 }
             })
             .catch(err => {
-                console.log(err);
                 setError(true);
                 setSuccess(false);
             });

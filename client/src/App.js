@@ -11,9 +11,11 @@ import jsCookie from 'js-cookie';
 import Dashboard from './components/screens/Dashboard';
 import Axios from 'axios';
 
+const themeType = jsCookie.get('themeType') === 'dark' ? 'dark' : 'light' ;
+
 const themeInstance = createMuiTheme({
   palette: {
-    
+    type: themeType
   },
   spacing: 2
 });
@@ -43,7 +45,7 @@ function App() {
         .catch(err => {
           console.log(err)
         })
-      }, 3000)
+      },  1500)
     }
   }
 

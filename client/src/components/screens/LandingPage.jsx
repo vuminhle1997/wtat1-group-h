@@ -56,7 +56,7 @@ export default function LandingPage() {
                             label="Remember me"
                         />
                         <Grid container>
-                            <Grid xs={6}>
+                            <Grid item xs={6}>
                                 <Button
                                     variant="contained"
                                     color="primary"
@@ -64,7 +64,7 @@ export default function LandingPage() {
                                     Login
                                 </Button>
                             </Grid>
-                            <Grid xs={6}>
+                            <Grid item xs={6}>
                                 <Button
                                     variant="contained"
                                     color="secondary"
