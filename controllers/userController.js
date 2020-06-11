@@ -66,6 +66,7 @@ async function sendVerificationMail(firstname, lastname, email, hash, id) {
             </body>
             </html>
         `
+
     });
 
     console.log("Message sent: %s", receiver.messageId);
@@ -207,10 +208,7 @@ async function createUser(req, res) {
                     latitude: latitude,
                     longitude: longitude,
                     role: role
-                }).then(async (doc) => {
-                    sendVerificationMail(doc.firstname, doc.lastname, doc.email, doc.password, doc._id)
-                        .catch(console.error);
-        
+                }).then(async (doc) => {     
                     const token = await createJWTToken(doc._id, doc.username);
                     return res.status(200).json({
                         mes: 'You succesfully registrrated . . .',
@@ -248,7 +246,7 @@ function loginUser(req, res) {
                 } else {
                     // VALID PASSWORD 
                     const token = await createJWTToken(doc._id, doc.username);
-                    return res.json({
+                    return res.status(200).json({
                         mes: 'You succcesfully logged in and get redirected',
                         token: token
                     });
@@ -327,11 +325,11 @@ function deleteProfile(req, res) {
                             await docReport.remove();
                         });
                     }
-                })
+                });
 
                 await doc.remove();
 
-                return res.status(200).json({mes: "Deleted profile and all related stuffs"})
+                return res.status(200).json({mes: "Deleted profile and all related stuffs"});
             } else {
                 return res.sendStatus(400);
             }

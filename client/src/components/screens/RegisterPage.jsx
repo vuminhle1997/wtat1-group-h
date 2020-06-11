@@ -1,5 +1,5 @@
 import React from 'react'
-import { Container, FormGroup, TextField, Grid, FormControl, InputLabel, Select, MenuItem, Button, Typography } from '@material-ui/core'
+import { Container, FormGroup, TextField, Grid, FormControl, InputLabel, Select, MenuItem, Button, Typography, makeStyles, Fab } from '@material-ui/core'
 import { useState } from 'react';
 
 import { useHistory } from 'react-router-dom';
@@ -19,16 +19,34 @@ export const days = range(1, 31);
 export const months = range(1, 12);
 export const years = range(1970,  2020);
 
+const useStyles = makeStyles({
+    root: {
+        padding: '2em',
+    },
+    wrapper: {
+        padding: '2em',
+        "& .MuiFormControl-root": {
+            padding: '.75em 0 .5em 0'
+        },
+    },
+    back: {
+        position: "fixed",
+        top: '0.5em',
+        left: '0.5em'
+    }
+});
+
 export default function RegisterPage({
     setAppState
 }) {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition((position) => {
-            setLat(position.coords.latitude)
+            setLat(position.coords.latitude);
             setLng(position.coords.longitude);
-        })
+        });
     }
     const history = useHistory();
+    const classes = useStyles();
 
     const [ lat, setLat ] = useState(0);
     const [ lng, setLng ] = useState(0);
@@ -100,7 +118,20 @@ export default function RegisterPage({
 
     return (
         <>
-        <Container>
+        <Fab 
+            color="primary"
+            onClick={() => history.push('/')}
+            className={classes.back}
+        >
+            <div
+                dangerouslySetInnerHTML={
+                    {
+                        __html: '<'
+                    }
+                }
+            />
+        </Fab>
+        <Container className={classes.wrapper}>
             <FormGroup>
                 <TextField
                     label="Username *"

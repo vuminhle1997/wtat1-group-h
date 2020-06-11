@@ -2,8 +2,8 @@
   position: inherit !important;
   min-height: 480px;
   max-height: 680px;
-  min-width: 100vw !important;
-  max-width: 100vw !important;
+  min-width: 100% !important;
+  /* max-width: 100 !important; */
   margin: 0 auto;
   padding: 0 !important;
 }

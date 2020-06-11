@@ -13,16 +13,16 @@ export default function ProfilePage() {
     const [ username, setUsername ] = useState('');
     const [ firstname, setFirstname] = useState('');
     const [ lastname, setLastname ] = useState('');
-    const [ email, setEmail ] = useState('');
+    const [ email, setEmail ] = useState( '');
     const [ password, setPassword ] = useState('');
-    const [ newPassword, setConfirmPassword ] = useState('');
-    const [ day, setDay ] = useState(1);
-    const [ month, setMonth ] = useState(1);
-    const [ year, setYear ] = useState(2020);
-    const [ gender, setGender ] = useState('');
-    const [ personalId, setPersonalId ] = useState('');
-    const [ address, setAddress ] = useState('');
-    const [ phonenumber, setPhoneNumber ] = useState(null);
+    const [ newPassword, setConfirmPassword ] = useState();
+    const [ day, setDay ] = useState();
+    const [ month, setMonth ] = useState();
+    const [ year, setYear ] = useState();
+    const [ gender, setGender ] = useState();
+    const [ personalId, setPersonalId ] = useState();
+    const [ address, setAddress ] = useState();
+    const [ phonenumber, setPhoneNumber ] = useState();
     
     const [ error, setError ] = useState(false);
     const [ success, setSuccess ] = useState(false);
@@ -33,7 +33,7 @@ export default function ProfilePage() {
 
     useEffect(() => {
 
-    }, [error, success]);
+    }, [error, success, username]);
 
     const fetchProfileData = async() => {
         await Axios.get('http://localhost:5000/api/v1.0/users/profile', {
@@ -42,6 +42,29 @@ export default function ProfilePage() {
             }
         }).then(res => {
             console.log(res);
+            const {
+                username,
+                firstname,
+                lastname,
+                email,
+                dob,
+                gender,
+                personalId,
+                address,
+                phonenumber
+            } = res.data;
+
+            setUsername(username);
+            setFirstname(firstname);
+            setLastname(lastname);
+            setEmail(email);
+            setDay(parseInt(dob.substring(0,2)));
+            setMonth(parseInt(dob.substring(3, 5)));
+            setYear(parseInt(dob.substring(6, dob.length + 1)));
+            setGender(gender);
+            setPersonalId(personalId);
+            setAddress(address);
+            setPhoneNumber(phonenumber);
         })
         .catch(err => {
             console.log(err);
