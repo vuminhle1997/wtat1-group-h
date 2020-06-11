@@ -1,5 +1,87 @@
 import React, { Component, createRef } from 'react';
 import Axios from 'axios';
+
+const styles = [
+    {elementType: 'geometry', stylers: [{color: '#242f3e'}]},
+    {elementType: 'labels.text.stroke', stylers: [{color: '#242f3e'}]},
+    {elementType: 'labels.text.fill', stylers: [{color: '#746855'}]},
+    {
+      featureType: 'administrative.locality',
+      elementType: 'labels.text.fill',
+      stylers: [{color: '#d59563'}]
+    },
+    {
+      featureType: 'poi',
+      elementType: 'labels.text.fill',
+      stylers: [{color: '#d59563'}]
+    },
+    {
+      featureType: 'poi.park',
+      elementType: 'geometry',
+      stylers: [{color: '#263c3f'}]
+    },
+    {
+      featureType: 'poi.park',
+      elementType: 'labels.text.fill',
+      stylers: [{color: '#6b9a76'}]
+    },
+    {
+      featureType: 'road',
+      elementType: 'geometry',
+      stylers: [{color: '#38414e'}]
+    },
+    {
+      featureType: 'road',
+      elementType: 'geometry.stroke',
+      stylers: [{color: '#212a37'}]
+    },
+    {
+      featureType: 'road',
+      elementType: 'labels.text.fill',
+      stylers: [{color: '#9ca5b3'}]
+    },
+    {
+      featureType: 'road.highway',
+      elementType: 'geometry',
+      stylers: [{color: '#746855'}]
+    },
+    {
+      featureType: 'road.highway',
+      elementType: 'geometry.stroke',
+      stylers: [{color: '#1f2835'}]
+    },
+    {
+      featureType: 'road.highway',
+      elementType: 'labels.text.fill',
+      stylers: [{color: '#f3d19c'}]
+    },
+    {
+      featureType: 'transit',
+      elementType: 'geometry',
+      stylers: [{color: '#2f3948'}]
+    },
+    {
+      featureType: 'transit.station',
+      elementType: 'labels.text.fill',
+      stylers: [{color: '#d59563'}]
+    },
+    {
+      featureType: 'water',
+      elementType: 'geometry',
+      stylers: [{color: '#17263c'}]
+    },
+    {
+      featureType: 'water',
+      elementType: 'labels.text.fill',
+      stylers: [{color: '#515c6d'}]
+    },
+    {
+      featureType: 'water',
+      elementType: 'labels.text.stroke',
+      stylers: [{color: '#17263c'}]
+    }
+];
+
 class Maps extends Component {
     googleMapRef = React.createRef()
 
@@ -14,110 +96,30 @@ class Maps extends Component {
 
     componentDidMount() {
         const googleMapScript = document.createElement('script');
-        googleMapScript.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyDDBbsuWC7X8v2Xxa92Vs15Xb-S4wENnxU`;
+        googleMapScript.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyDlcik1-nD4XiC1ryjEF6JjZO39hsrHP84`;
         window.document.body.appendChild(googleMapScript);
 
         googleMapScript.addEventListener('load',() => {
-            this.state = {
-                googleMap: this.createGoogleMap()
-            }
+            this.state.googleMap = this.createGoogleMap()
             this.onMapChange();
             this.fetchData();
         });    
     }
 
     componentDidUpdate() {
-        
+        this.drawCircles();
     }
 
     createGoogleMap = () => {
+        const { lat , lng } = this.props;
         return new window.google.maps.Map(this.googleMapRef.current, {
             zoom: 10,
             center: {
-                lat: 52.503325,
-                lng: 13.426746,
+                lat: lat || 52.503325,
+                lng: lng || 13.426746,
             },
-            styles: [
-                {elementType: 'geometry', stylers: [{color: '#242f3e'}]},
-                {elementType: 'labels.text.stroke', stylers: [{color: '#242f3e'}]},
-                {elementType: 'labels.text.fill', stylers: [{color: '#746855'}]},
-                {
-                  featureType: 'administrative.locality',
-                  elementType: 'labels.text.fill',
-                  stylers: [{color: '#d59563'}]
-                },
-                {
-                  featureType: 'poi',
-                  elementType: 'labels.text.fill',
-                  stylers: [{color: '#d59563'}]
-                },
-                {
-                  featureType: 'poi.park',
-                  elementType: 'geometry',
-                  stylers: [{color: '#263c3f'}]
-                },
-                {
-                  featureType: 'poi.park',
-                  elementType: 'labels.text.fill',
-                  stylers: [{color: '#6b9a76'}]
-                },
-                {
-                  featureType: 'road',
-                  elementType: 'geometry',
-                  stylers: [{color: '#38414e'}]
-                },
-                {
-                  featureType: 'road',
-                  elementType: 'geometry.stroke',
-                  stylers: [{color: '#212a37'}]
-                },
-                {
-                  featureType: 'road',
-                  elementType: 'labels.text.fill',
-                  stylers: [{color: '#9ca5b3'}]
-                },
-                {
-                  featureType: 'road.highway',
-                  elementType: 'geometry',
-                  stylers: [{color: '#746855'}]
-                },
-                {
-                  featureType: 'road.highway',
-                  elementType: 'geometry.stroke',
-                  stylers: [{color: '#1f2835'}]
-                },
-                {
-                  featureType: 'road.highway',
-                  elementType: 'labels.text.fill',
-                  stylers: [{color: '#f3d19c'}]
-                },
-                {
-                  featureType: 'transit',
-                  elementType: 'geometry',
-                  stylers: [{color: '#2f3948'}]
-                },
-                {
-                  featureType: 'transit.station',
-                  elementType: 'labels.text.fill',
-                  stylers: [{color: '#d59563'}]
-                },
-                {
-                  featureType: 'water',
-                  elementType: 'geometry',
-                  stylers: [{color: '#17263c'}]
-                },
-                {
-                  featureType: 'water',
-                  elementType: 'labels.text.fill',
-                  stylers: [{color: '#515c6d'}]
-                },
-                {
-                  featureType: 'water',
-                  elementType: 'labels.text.stroke',
-                  stylers: [{color: '#17263c'}]
-                }
-              ]
-        })
+            styles: styles
+        });
     }
 
     drawCircles = () => {
@@ -255,7 +257,6 @@ class Maps extends Component {
             },
             radius: 15000 // r = 150m
         }); 
-        console.log(circle);
         return circle;
     }
 
@@ -269,7 +270,7 @@ class Maps extends Component {
 
         await Axios.get(COVIDAPI)
             .then(results => {
-                console.log(results);
+                // console.log(results);
                 this.setState({infectedCountries: results.data}, () => console.log(this.state.infectedCountries));
             })
             .catch(err => {

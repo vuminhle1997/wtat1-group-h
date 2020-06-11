@@ -58,17 +58,6 @@ let UserSchema = new mongoose.Schema({
         enum: ["User", "Employee_Public_Health"],
         required: false
     },
-    active: {
-        type: Boolean,
-        default: false
-    }
 }, { timestamps: true });
-
-// UserSchema.path('email').validate((value, next) => {
-//     mongoose.model('User').findOne({email: value}, (err, user) => {
-//         if (err) return next(err);
-
-//     })
-// })
 
 mongoose.model('User', UserSchema);

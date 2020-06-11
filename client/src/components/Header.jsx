@@ -16,7 +16,9 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function Header() {
+export default function Header({
+    handleLogout
+}) {
     const classes = useStyles();
     const history = useHistory();
 
@@ -72,10 +74,18 @@ export default function Header() {
                         open={open}
                         onClose={handleClose}
                     >
-                        <MenuItem onClick={() => {
-                            history.push('/profile');
-                        }}>Profile</MenuItem>
-                        <MenuItem>Logout</MenuItem>
+                        <MenuItem 
+                            onClick={() => {
+                                history.push('/profile');
+                            }}
+                        >
+                            Profile
+                        </MenuItem>
+                        <MenuItem
+                            onClick={handleLogout}
+                        >
+                            Logout
+                        </MenuItem>
                     </Menu>
                 </Toolbar>
             </AppBar>

@@ -9,35 +9,57 @@ import Maps from '../Maps';
 import AddIcon from '@material-ui/icons/Add';
 import ReportForm from './ReportForm';
 import { useHistory } from 'react-router-dom';
-
+import jsCookie from 'js-cookie';
 
 const useStyles = makeStyles({
     addIcon: {
-        position: 'absolute',
+        position: 'fixed',
         bottom: '1em',
         right: '1em',
-    }
+    },
+    accordion: {
+        margin: '.5em auto'
+    },
 })
 
 
 export default function Dashboard({
-    appState
+    appState,
+    handleLogout,
+    isAdmin,
+    setIsAdmin,
+    auth
 }) {
     const classes = useStyles();
     const history = useHistory();
 
     const [ reports, setReports ] = useState(null);
     const [ offset, setOffset ] = useState(0);
+    const [ lat, setLat ] = useState(52.425);
+    const [ lng, setLng ] = useState(78.454787);
 
     const [ openReportForm, setOpenReportForm ] = useState(null);
 
     useEffect(() => {
         retrieveReports();
+        getGeolocation();
+        getUserData();
     }, []);
 
     useEffect(() => {
 
     }, [offset]);
+
+    
+
+    const getGeolocation = () => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition((position) => {
+                setLat(position.coords.latitude);
+                setLng(position.coords.longitude);
+            });
+        }
+    }
 
     const retrieveReports = async() => {
         await Axios.get('http://localhost:5000/api/v1.0/reports/')
@@ -61,14 +83,17 @@ export default function Dashboard({
 
     return (
         <>
-        <Header />
+        <Header handleLogout={handleLogout}/>
         {
             appState === 1 ? 
             <div>
                 Loading
             </div> :
             <main>
-                <Maps />
+                <Maps 
+                    lat={lat}
+                    lng={lng}
+                />
                 <Container>
                     
                     {

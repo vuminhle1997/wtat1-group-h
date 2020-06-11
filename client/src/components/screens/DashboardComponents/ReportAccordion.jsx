@@ -4,13 +4,16 @@ import { ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails, Typograph
 const useStlyes =  makeStyles({
     root: {
         display: 'block'
+    },
+    div: {
+        margin: '.5em auto'
     }
 });
 
 export default function ReportAccordion({report, index}) {
     const classes = useStlyes();
     return (
-        <ExpansionPanel key={report._id}>
+        <ExpansionPanel className={classes.div} key={report._id}>
             <ExpansionPanelSummary
                 expandIcon={"x"}
             >

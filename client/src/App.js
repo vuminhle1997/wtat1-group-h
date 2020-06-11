@@ -20,10 +20,34 @@ const themeInstance = createMuiTheme({
 
 function App() {
   const [ appState, setAppState ] = useState(0);
+  const [ auth, setAuth ] = useState(false);
+  const [ isAdmin, setIsAdmin ] = useState(false);
+  const [ user, setUser ] = useState(null);
 
   useEffect(() => {
     checkToken();
   }, []);
+
+  useEffect(() => {
+    if (auth === true) getUserData();
+  }, [auth]);
+
+  const getUserData = async() => {
+    const config = {
+        headers: {
+          Authorization: `Bearer ${jsCookie.get('authToken')}`
+        }
+    }
+    await Axios.get('http://localhost:5000/api/v1.0/users/profile', config)
+    .then(res => {
+      console.log(res);
+      if (res.data.role === 'Employee_Public_Health') setIsAdmin(true);
+      setUser(res.data);
+    })
+    .catch(err => {
+      console.log(err);
+    });
+}
 
   const checkToken = async() => {
     if (jsCookie.get('authToken')) {
@@ -36,7 +60,7 @@ function App() {
         }).then(res => {
           if (res.status === 200) {
             setAppState(2);
-            console.log("succesfull");
+            setAuth(true);
             jsCookie.set('authToken', res.data.token);
           }
         })
@@ -48,8 +72,10 @@ function App() {
   }
 
   const handleLogout = async() => {
-    setAppState(0);
-    await jsCookie.remove('authToken')
+    await jsCookie.remove('authToken');
+    setTimeout(() => {
+      setAppState(0);
+    }, 1000);
   }
 
   return (
@@ -59,14 +85,28 @@ function App() {
           <Switch>
             <Route exact path="/">
               {
-                appState === 0 ? <LandingPage /> : <Dashboard appState={appState}/>
+                appState === 0 ? 
+                  <LandingPage 
+                    setAppState={setAppState}
+                    setAuth={setAuth}
+                  /> : 
+                  <Dashboard 
+                    appState={appState} 
+                    auth={auth}
+                    setIsAdmin={setIsAdmin}
+                    isAdmin={isAdmin}
+                    handleLogout={handleLogout}
+                  />
               }
             </Route>
             <Route path="/profile">
-              <ProfilePage />
+              <ProfilePage user={user}/>
             </Route>
             <Route path="/register">
-              <RegisterPage setAppState={setAppState}/>
+              <RegisterPage 
+                setAppState={setAppState}
+                setAuth={setAuth}  
+              />
             </Route>
           </Switch>
         </Router>
