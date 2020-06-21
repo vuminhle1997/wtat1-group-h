@@ -43,7 +43,6 @@ export default function Dashboard({
     useEffect(() => {
         retrieveReports();
         getGeolocation();
-        getUserData();
     }, []);
 
     useEffect(() => {
