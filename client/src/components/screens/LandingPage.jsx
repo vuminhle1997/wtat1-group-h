@@ -1,9 +1,15 @@
 import React, { useEffect } from 'react'
-import { Container, Grid, FormGroup, TextField, FormControlLabel, Checkbox, Button, makeStyles, Typography } from '@material-ui/core'
+import { Container, Grid, FormGroup, TextField, FormControlLabel, Checkbox, Button, makeStyles, Typography, rgbToHex } from '@material-ui/core'
 import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import Axios from 'axios';
 import jsCookie from 'js-cookie';
+
+import docter from '../../img/doctor-woman.svg';
+import woman from '../../img/remote-work-woman.svg';
+import logo from '../../img/logo.svg';
+
+const year = new Date().getFullYear();
 
 const useStyles = makeStyles({
     root: {
@@ -14,8 +20,16 @@ const useStyles = makeStyles({
         "& .MuiFormControl-root": {
             padding: '.75em 0 .5em 0'
         },
+    },
+    headline: {
+        padding: '.75em 0',
+        fontWeight: 'bold',
+        letterSpacing: 2,
+        color: '#8a8a8a'
     }
-})
+});
+
+const loginURL = window.location.href.includes('local') ? 'http://localhost:5000/api/v1.0/users/login' : 'https://covid-19-wtat1-group-h.herokuapp.com/api/v1.0/users/login';
 
 export default function LandingPage({setAppState}) {
     const history = useHistory();
@@ -55,7 +69,7 @@ export default function LandingPage({setAppState}) {
                 password: password,
             },
         }
-        await Axios.post('http://localhost:5000/api/v1.0/users/login', body)
+        await Axios.post(loginURL, body)
         .then(res => {
             console.log(res);
             if (res.status === 200) {
@@ -77,12 +91,18 @@ export default function LandingPage({setAppState}) {
         <>
         <Container className={classes.root}>
             <Grid container>
-                <Grid item xs={8}>
-                    <div>big image</div>
+                <Grid item xs={4}>
+                    <img src={docter} alt="" srcset=""/>
+                </Grid>
+                <Grid item xs={4}>
+                    <img src={woman} alt="" srcset=""/>
                 </Grid>
                 <Grid item xs={4} className={classes.wrapper}>
                     <FormGroup>
-                        <div className="covid-logo-app">LOGO</div>
+                        <img height="100px" src={logo} alt="" srcset=""/>
+                        <Typography variant="h4" align="center" className={classes.headline}>
+                            COVID-19 APP
+                        </Typography>
                         <TextField
                             label="Email"
                             variant="outlined"
@@ -132,7 +152,15 @@ export default function LandingPage({setAppState}) {
                         </Grid>
                     </FormGroup>
                 </Grid>
+                
+                
             </Grid>
+            <Typography variant="body1" align="center">
+                &copy;
+                {
+                ` ${year} | Barne Kleinen - All rights reserved`
+                }
+            </Typography>
         </Container>
         </>
     );

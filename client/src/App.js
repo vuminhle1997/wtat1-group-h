@@ -8,6 +8,10 @@ import jsCookie from 'js-cookie';
 import Dashboard from './components/screens/Dashboard';
 import Axios from 'axios';
 import ProfilePage from './components/screens/ProfilePage';
+import io from 'socket.io-client';
+import NotificationBox from './components/NotificationBox';
+import { Snackbar } from '@material-ui/core';
+import MuiAlert from '@material-ui/lab/Alert';
 
 const themeType = jsCookie.get('themeType') === 'dark' ? 'dark' : 'light' ;
 
@@ -18,14 +22,38 @@ const themeInstance = createMuiTheme({
   spacing: 2
 });
 
+const mainURL = window.location.href.includes('localhost') ? 'http://localhost:5000/' : 'https://covid-19-wtat1-group-h.herokuapp.com/';
+const getProfileURL = window.location.href.includes('localhost') ? 'http://localhost:5000/api/v1.0/users/profile' : 'https://covid-19-wtat1-group-h.herokuapp.com/api/v1.0/users/profile';
+const refreshTokenURL = window.location.href.includes('localhost') ? 'http://localhost:5000/api/v1.0/users/refresh' : 'https://covid-19-wtat1-group-h.herokuapp.com/api/v1.0/users/refresh';
+
 function App() {
   const [ appState, setAppState ] = useState(0);
   const [ auth, setAuth ] = useState(false);
   const [ isAdmin, setIsAdmin ] = useState(false);
   const [ user, setUser ] = useState(null);
+  const [ intervalReport, setIntervalReport ] = useState(null);
+  const [ open, setOpen ] = React.useState(false);
+
+  const handleClick = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
 
   useEffect(() => {
     checkToken();
+    const socket = io(mainURL);
+    socket.on('covid daily report', (data) => {
+      console.log(data);
+      setIntervalReport(data);
+      handleClick();
+    })
   }, []);
 
   useEffect(() => {
@@ -38,7 +66,7 @@ function App() {
           Authorization: `Bearer ${jsCookie.get('authToken')}`
         }
     }
-    await Axios.get('http://localhost:5000/api/v1.0/users/profile', config)
+    await Axios.get(getProfileURL, config)
     .then(res => {
       console.log(res);
       if (res.data.role === 'Employee_Public_Health') setIsAdmin(true);
@@ -53,7 +81,7 @@ function App() {
     if (jsCookie.get('authToken')) {
       setAppState(1);
       setTimeout(async() => {
-        await Axios.post('http://localhost:5000/api/v1.0/users/refresh', {}, {
+        await Axios.post(refreshTokenURL, {}, {
           headers: {
             Authorization: `Bearer ${jsCookie.get('authToken')}`
           }
@@ -80,6 +108,16 @@ function App() {
 
   return (
     <div>
+      {
+        intervalReport ? 
+          <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+            <MuiAlert severity="warning" onClose={handleClose} elevation={6} variant="filled">
+              Total new cases: {intervalReport.NewConfirmed} <br/>
+              Total cases: {intervalReport.TotalConfirmed}
+            </MuiAlert>
+          </Snackbar>
+        : null
+      }
       <ThemeProvider theme={themeInstance}>
         <Router>
           <Switch>

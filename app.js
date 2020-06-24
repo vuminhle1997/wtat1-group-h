@@ -59,18 +59,15 @@ io.on('connection', function(socket) {
 });
 
 // every day on 18:00, check the total count of covid infected people around the world
-const hourInterval = (1000 * 60 * 60);
+const hourInterval = (1000 * 60);
 setInterval(() => {
-    const todayHour = new Date().getHours(); 
-    if (todayHour === 18) {
-        fetch('https://api.covid19api.com/summary')
-            .then(res => res.json())
-            .then(data => {
-                const COVIDGLOBAL = data.Global;
-                console.log(`Global COVID-19 REPORT`, COVIDGLOBAL);
-                io.emit('covid daily report', COVIDGLOBAL);
-            });
-    }
+    fetch('https://api.covid19api.com/summary')
+        .then(res => res.json())
+        .then(data => {
+            const COVIDGLOBAL = data.Global;
+            console.log(`Global COVID-19 REPORT`, COVIDGLOBAL);
+            io.emit('covid daily report', COVIDGLOBAL);
+    });
 }, hourInterval);
 
 // starts the web app

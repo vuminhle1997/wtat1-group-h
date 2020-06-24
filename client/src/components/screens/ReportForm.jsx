@@ -45,6 +45,8 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+const submitReportURL = window.location.href.includes('local') ? 'http://localhost:5000/api/v1.0/reports/report' : 'https://covid-19-wtat1-group-h.herokuapp.com/api/v1.0/reports/report';
+
 export default function ReportForm({handleClose, openReportForm}) {
     const classes = useStyles();
 
@@ -57,7 +59,7 @@ export default function ReportForm({handleClose, openReportForm}) {
     const [ lat, setLat ] = useState(0);
     const [ lng, setLng ] = useState(0);
 
-    const [ disabled, setDisabled ] = useState(false)
+    const [ disabled, setDisabled ] = useState(false);
 
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition((position) => {
@@ -86,7 +88,7 @@ export default function ReportForm({handleClose, openReportForm}) {
         }
 
         await setDisabled(true);
-        await Axios.post('http://localhost:5000/api/v1.0/reports/report', body, config)
+        await Axios.post(submitReportURL, body, config)
         .then(res => {
             console.log(res);
             setTimeout(() => handleClose(), 1500);
@@ -94,7 +96,7 @@ export default function ReportForm({handleClose, openReportForm}) {
         .catch(err => {
             console.log(err);
             setDisabled(false);
-        })
+        });
     }
 
     return (

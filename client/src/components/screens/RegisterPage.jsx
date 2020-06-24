@@ -36,6 +36,8 @@ const useStyles = makeStyles({
     }
 });
 
+const registerURL = window.location.href.includes('local') ? 'http://localhost:5000/api/v1.0/users/create' : 'https://covid-19-wtat1-group-h.herokuapp.com/api/v1.0/users/create';
+
 export default function RegisterPage({
     setAppState
 }) {
@@ -97,7 +99,7 @@ export default function RegisterPage({
                 }
             }
 
-            await Axios.post(`http://localhost:5000/api/v1.0/users/create`, body)
+            await Axios.post(registerURL, body)
             .then(res => {
                 if (res.status === 200) {
                     // redirect and store token as cookie

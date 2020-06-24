@@ -20,8 +20,9 @@ const useStyles = makeStyles({
     accordion: {
         margin: '.5em auto'
     },
-})
+});
 
+const getReportsURL = window.location.href.includes('local') ? 'http://localhost:5000/api/v1.0/reports/' : 'https://covid-19-wtat1-group-h.herokuapp.com/api/v1.0/reports/';
 
 export default function Dashboard({
     appState,
@@ -43,7 +44,6 @@ export default function Dashboard({
     useEffect(() => {
         retrieveReports();
         getGeolocation();
-        getUserData();
     }, []);
 
     useEffect(() => {
@@ -62,7 +62,7 @@ export default function Dashboard({
     }
 
     const retrieveReports = async() => {
-        await Axios.get('http://localhost:5000/api/v1.0/reports/')
+        await Axios.get(getReportsURL)
         .then(res => {
             if (res.status === 200) {
                 console.log(res) 

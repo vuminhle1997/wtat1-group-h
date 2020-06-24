@@ -142,7 +142,8 @@ class Maps extends Component {
     }
 
     fetchAreasByBounds = async(latBounds, lngBounds) => {
-        await Axios.get(`http://localhost:5000/api/v1.0/areas?minLat=${latBounds.min}&maxLat=${latBounds.max}&minLng=${lngBounds.min}&maxLng=${lngBounds.max}`)
+        const getMapURL = window.location.href.includes('local') ? `http://localhost:5000/api/v1.0/areas?minLat=${latBounds.min}&maxLat=${latBounds.max}&minLng=${lngBounds.min}&maxLng=${lngBounds.max}`: `https://covid-19-wtat1-group-h.herokuapp.com/api/v1.0/areas?minLat=${latBounds.min}&maxLat=${latBounds.max}&minLng=${lngBounds.min}&maxLng=${lngBounds.max}`;
+        await Axios.get(getMapURL)
             .then(res => {
                 if(res.data.length > 0) {
                     console.log(res.data);
@@ -181,8 +182,8 @@ class Maps extends Component {
         // Y = south west, U = north east
         googleMap.addListener('dragend', () => {
             const latBounds = {
-                min: googleMap.getBounds().Ya.i,
-                max: googleMap.getBounds().Ya.j
+                min: googleMap.getBounds().Za.i,
+                max: googleMap.getBounds().Za.j
             }
             const lngBounds = {
                 min: googleMap.getBounds().Ua.i,
