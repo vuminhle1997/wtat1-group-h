@@ -13,11 +13,7 @@ const helmet = require('helmet');
 
 const app = new express();
 
-app.set('view engine', 'ejs');
-app.get('/', function(req, res) {
-    res.render('pages/index.ejs');
-});
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/build'));
 
 // middle-wares e.g. "body-parser"
 app.use(helmet());
@@ -27,7 +23,7 @@ app.use(cookieParser());
 app.use(morgan('combined', {
     stream: fs.createWriteStream(path.join(__dirname, './logs/access.log'), { flags: 'a'})
 }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'index.html')));
 mongoose.connect(process.env.MONGO_URL, {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true}, (err) => {
     if (err) return console.log(err)
     console.log(`App is connected to DB, \n ${process.env.MONGO_URL}`);
