@@ -158,7 +158,7 @@ export default function LandingPage({setAppState}) {
             <Typography variant="body1" align="center">
                 &copy;
                 {
-                ` ${year} | Barne Kleinen - All rights reserved`
+                ` ${year} | Minh Manh Cong - All rights reserved`
                 }
             </Typography>
         </Container>
