@@ -232,7 +232,7 @@ function loginUser(req, res) {
         if (err) throw new Error(err);
 
         if (!doc) {
-            return res.json({mes: 'User does not exits'});
+            return res.status(201).json({mes: 'User does not exits'});
         } else {
             /**
              * Mongoose returns a document.

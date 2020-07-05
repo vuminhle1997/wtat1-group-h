@@ -75,7 +75,7 @@ export default function RegisterPage({
     }, [error, success]);
 
     const registerUser = async() => {
-        if (password === confirmPassword && password.length > 8) {
+        if (password === confirmPassword && password.length > 1) {
             let _day, _month;
             (day >= 1 && day < 10) ? _day = `0${day}` : _day = day;
             (month >= 1 && month < 10) ? _month = `0${month}`: _month = month;

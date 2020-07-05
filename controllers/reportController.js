@@ -299,6 +299,7 @@ function deleteReport(req, res) {
 }
 
 function approveCovid(req, res) {
+    console.log(req.headers)
     if (req.payload.id) {
         const { _id } = req.body.report;
         User.findById(req.payload.id, async(err, user) => {
@@ -313,7 +314,43 @@ function approveCovid(req, res) {
                         return res.sendStatus(500);
                     } 
                     if (report) {
-                        report.status = true;
+                        report.status = "positive";
+                        report.save()
+                            .then(result => {
+                                console.log(result);
+                                return res.status(200).json({mes: 'Report set to positive'});
+                            })
+                            .catch(err => {
+                                console.error(err);
+                                return res.sendStatus(500);
+                            })
+                    } else {
+                        return res.sendStatus(404);
+                    }
+                });
+            } else {
+                return res.sendStatus(401);
+            }
+        });
+    }
+}
+
+function negativeCovid(req, res) {
+    if (req.payload.id) {
+        const { _id } = req.body.report;
+        User.findById(req.payload.id, async(err, user) => {
+            if (err) {
+                console.error(err);
+                return res.sendStatus(404);
+            }
+            if (user.role === ADMIN) {
+                await Report.findById(_id, (err, report) => {
+                    if (err) {
+                        console.error(err);
+                        return res.sendStatus(500);
+                    } 
+                    if (report) {
+                        report.status = "negative";
                         report.save()
                             .then(result => {
                                 console.log(result);
@@ -342,5 +379,6 @@ module.exports = {
     createReport: createReport,
     editReport: editReport,
     deleteReport: deleteReport,
-    approveCovid: approveCovid
+    approveCovid: approveCovid,
+    negativeCovid: negativeCovid
 }

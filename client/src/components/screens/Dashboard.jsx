@@ -23,18 +23,20 @@ const useStyles = makeStyles({
 });
 
 const getReportsURL = window.location.href.includes('local') ? 'http://localhost:5000/api/v1.0/reports/' : 'https://covid-19-wtat1-group-h.herokuapp.com/api/v1.0/reports/';
-
+const getOwnReportsURL = window.location.href.includes('local') ? 'http://localhost:5000/api/v1.0/reports/user?id=' : 'https://covid-19-wtat1-group-h.herokuapp.com/api/v1.0/reports/user?id=';
 export default function Dashboard({
     appState,
     handleLogout,
     isAdmin,
     setIsAdmin,
-    auth
+    auth,
+    user
 }) {
     const classes = useStyles();
     const history = useHistory();
 
-    const [ reports, setReports ] = useState(null);
+    const [ reports, setReports ] = useState([]);
+    const [ ownReports, setOwnReports ] = useState([]);
     const [ offset, setOffset ] = useState(0);
     const [ lat, setLat ] = useState(52.425);
     const [ lng, setLng ] = useState(78.454787);
@@ -42,15 +44,35 @@ export default function Dashboard({
     const [ openReportForm, setOpenReportForm ] = useState(null);
 
     useEffect(() => {
-        retrieveReports();
+        if (isAdmin) {
+            retrieveReports();
+        } else {
+            getOwnReports();
+        }
         getGeolocation();
-    }, []);
+    }, [user]);
 
     useEffect(() => {
 
     }, [offset]);
 
-    
+    const getOwnReports = async() => {
+        if (user !== null) {
+            const { _id } = user;
+            if (_id != undefined) {
+                await Axios.get(`${getOwnReportsURL}${_id}`)
+                    .then(res => {
+                        console.log(res);
+                        if (res.status === 200) {
+                            setOwnReports(res.data.reports)
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err);
+                })
+            }
+        }
+    }
 
     const getGeolocation = () => {
         if (navigator.geolocation) {
@@ -97,9 +119,16 @@ export default function Dashboard({
                 <Container>
                     
                     {
-                        reports.map((report, index) => {
-                            return <ReportAccordion key={index} report={report}/>
-                        })
+                        (reports.length > 0) ? reports.map((report, index) => {
+                            return <ReportAccordion index={index} key={index} report={report} isAdmin={isAdmin}/>
+                        }) : <div>
+                            {
+                                (ownReports.length > 0) ? ownReports.map((report, index) => {
+                                    return <ReportAccordion key={report._id} index={index} report={report} isAdmin={isAdmin}/>
+                                }) : ''
+                            }
+                            <h1>FAQ and Tips</h1>
+                        </div>
                     }
 
                     <Fab

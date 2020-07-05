@@ -131,6 +131,7 @@ function App() {
                   <Dashboard 
                     appState={appState} 
                     auth={auth}
+                    user={user}
                     setIsAdmin={setIsAdmin}
                     isAdmin={isAdmin}
                     handleLogout={handleLogout}
