@@ -13,6 +13,7 @@ const useStyles = makeStyles((theme) => ({
     },
     title: {
       flexGrow: 1,
+      marginLeft: "30px"
     },
 }));
 
@@ -39,14 +40,14 @@ export default function Header({
                 position="static"
             >
                 <Toolbar>
-                    <IconButton 
+                    {/* <IconButton 
                         edge="start" 
                         className={classes.menuButton} 
                         color="inherit" 
                         aria-label="menu"
                     >
                         <MenuIcon/>
-                    </IconButton>
+                    </IconButton> */}
                     <Typography variant="h6" className={classes.title}>
                         COVID-19 
                     </Typography>

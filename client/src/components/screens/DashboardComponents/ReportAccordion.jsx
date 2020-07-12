@@ -9,7 +9,7 @@ const useStlyes =  makeStyles({
         display: 'block'
     },
     div: {
-        margin: '.5em auto'
+        margin: '15px auto'
     }
 });
 

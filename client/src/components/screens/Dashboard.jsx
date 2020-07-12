@@ -11,6 +11,7 @@ import ReportForm from "./ReportForm";
 import { useHistory } from "react-router-dom";
 import jsCookie from "js-cookie";
 import { getProfileURL } from "./../../App";
+import Iframe from 'react-iframe'
 
 const useStyles = makeStyles({
   addIcon: {
@@ -21,6 +22,11 @@ const useStyles = makeStyles({
   accordion: {
     margin: ".5em auto",
   },
+  iframe: {
+      width: "100%",
+      height: "90vh",
+      margin: "2em auto"
+  }
 });
 
 const getReportsURL = window.location.href.includes("local")
@@ -137,7 +143,9 @@ export default function Dashboard({
           <Maps lat={lat} lng={lng} />
           <Container>
             {reports.length > 0 ? (
-              reports.map((report, index) => {
+              <div>
+                  <h1 style={{margin: "1em auto"}}>Submitted reports</h1>
+                {  reports.map((report, index) => {
                 return (
                   <ReportAccordion
                     index={index}
@@ -146,10 +154,11 @@ export default function Dashboard({
                     isAdmin={isAdmin}
                   />
                 );
-              })
+              })}
+              </div>
             ) : (
               <div>
-                {ownReports.length > 0
+                {ownReports?.length > 0
                   ? ownReports.map((report, index) => {
                       return (
                         <ReportAccordion
@@ -160,8 +169,14 @@ export default function Dashboard({
                         />
                       );
                     })
-                  : ""}
-                <h1>FAQ and Tips</h1>
+                  : <h1 style={{margin: "1em auto"}}>You haven't submitted yet . . .</h1>}
+                <h1 style={{padding: "1em auto", margin: "20px auto"}}>FAQ and Tips</h1>
+                <Iframe url="https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public"
+                    id="myId"
+                    className={classes.iframe}
+                    display="initial"
+                    position="relative"
+                />
               </div>
             )}
 

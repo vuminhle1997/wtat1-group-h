@@ -82,8 +82,6 @@ function getReports(req, res) {
     //     query.details = req.query.details;
 
     Report.find(query)
-        .limit(limit)
-        .skip(offset)
         .sort({date: 'desc'})
         .exec((err, results) => {
             if (err) {
