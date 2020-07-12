@@ -23,7 +23,7 @@ const themeInstance = createMuiTheme({
 });
 
 const mainURL = window.location.href.includes('localhost') ? 'http://localhost:5000/' : 'https://covid-19-wtat1-group-h.herokuapp.com/';
-const getProfileURL = window.location.href.includes('localhost') ? 'http://localhost:5000/api/v1.0/users/profile' : 'https://covid-19-wtat1-group-h.herokuapp.com/api/v1.0/users/profile';
+export const getProfileURL = window.location.href.includes('localhost') ? 'http://localhost:5000/api/v1.0/users/profile' : 'https://covid-19-wtat1-group-h.herokuapp.com/api/v1.0/users/profile';
 const refreshTokenURL = window.location.href.includes('localhost') ? 'http://localhost:5000/api/v1.0/users/refresh' : 'https://covid-19-wtat1-group-h.herokuapp.com/api/v1.0/users/refresh';
 
 function App() {
@@ -75,7 +75,7 @@ function App() {
     .catch(err => {
       console.log(err);
     });
-}
+  }
 
   const checkToken = async() => {
     if (jsCookie.get('authToken')) {
@@ -135,6 +135,8 @@ function App() {
                     setIsAdmin={setIsAdmin}
                     isAdmin={isAdmin}
                     handleLogout={handleLogout}
+                    setIsAdmin={setIsAdmin}
+                    setUser={setUser}
                   />
               }
             </Route>

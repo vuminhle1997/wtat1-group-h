@@ -24,13 +24,12 @@ export default function ReportAccordion({report, index, isAdmin}) {
 
     const confirmPositive = async() => {
         await Axios.put(positiveURL, {
+            report: {
+                id: report._id,
+            }
+        }, {
             headers: {
-                Authorization: `Bearer ${jsCookie.get('authToken')}`
-            },
-            body: {
-                report: {
-                    id: report._id
-                }
+                Authorization: `Bearer ${jsCookie.get("authToken")}`
             }
         }).then(res => {
             console.log(res);
@@ -51,15 +50,14 @@ export default function ReportAccordion({report, index, isAdmin}) {
     }
 
     const confirmNegative = async() => {
-        await Axios.put(negativeURL, {
+        await Axios.put(negativeURL, {          
+            report: {
+                id: report._id
+            }
+        }, {
             headers: {
                 Authorization: `Bearer ${jsCookie.get('authToken')}`
             },
-            body: {
-                report: {
-                    id: report._id
-                }
-            }
         }).then(res => {
             console.log(res);
             if(res.status === 200) {
@@ -121,7 +119,7 @@ export default function ReportAccordion({report, index, isAdmin}) {
                 <Typography variant="caption">From infected area:<Typography variant="body1">{report.infected_area ? 'yes': 'no' }</Typography></Typography>
                 <Typography variant="caption">Infected from a person: <Typography variant="body1">{report.person_from_infected ? 'yes' : 'no'}</Typography></Typography>
                 <Typography variant="caption">Infected: <Typography variant="body1">{report.infected_person ? 'yes': 'no'}</Typography></Typography>
-                <Typography variant="caption">Status: <Typography variant="body1">{report.status ? report.status : 'sent'}</Typography></Typography>
+                <Typography variant="caption">Status: <Typography variant="body1">{report?.status ? report.status : 'sent'}</Typography></Typography>
                 <ButtonGroup variant="contained">
                     <Button color="primary" onClick={confirmPositive}>
                         Postive

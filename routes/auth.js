@@ -9,17 +9,20 @@ let jwt = require('express-jwt'),
 
 const getTokenFromHeader = require('../config/helper').getTokenFromHeader;
 
+
 let auth = {
     required: jwt({
         secret: secret,
         userProperty: 'payload',
-        getToken: getTokenFromHeader
+        getToken: getTokenFromHeader,
+        algorithms: ['HS256']
     }),
     optional: jwt({
         secret: secret,
         userProperty: 'payload',
         credentialsRequired: false,
-        getToken: getTokenFromHeader
+        getToken: getTokenFromHeader,
+        algorithms: ['HS256']
     })
 }
 

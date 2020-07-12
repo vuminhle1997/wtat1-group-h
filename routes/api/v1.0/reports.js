@@ -16,9 +16,9 @@ router.put('/report', auth.optional, reportController.editReport);
 
 router.delete('/report', auth.optional, reportController.deleteReport);
 
-router.put('/positive', auth.optional, reportController.approveCovid);
+router.put('/positive', auth.required, reportController.approveCovid);
 
-router.put('/negative', auth.optional, reportController.negativeCovid);
+router.put('/negative', auth.required, reportController.negativeCovid);
 
 module.exports = router;
 

@@ -299,16 +299,16 @@ function deleteReport(req, res) {
 }
 
 function approveCovid(req, res) {
-    console.log(req.headers)
     if (req.payload.id) {
-        const { _id } = req.body.report;
+        const { id } = req.body.report;
+        console.log(id)
         User.findById(req.payload.id, async(err, user) => {
             if (err) {
                 console.error(err);
                 return res.sendStatus(404);
             }
             if (user.role === ADMIN) {
-                await Report.findById(_id, (err, report) => {
+                await Report.findById(id, (err, report) => {
                     if (err) {
                         console.error(err);
                         return res.sendStatus(500);
@@ -337,14 +337,14 @@ function approveCovid(req, res) {
 
 function negativeCovid(req, res) {
     if (req.payload.id) {
-        const { _id } = req.body.report;
+        const { id } = req.body.report;
         User.findById(req.payload.id, async(err, user) => {
             if (err) {
                 console.error(err);
                 return res.sendStatus(404);
             }
             if (user.role === ADMIN) {
-                await Report.findById(_id, (err, report) => {
+                await Report.findById(id, (err, report) => {
                     if (err) {
                         console.error(err);
                         return res.sendStatus(500);

@@ -8,7 +8,6 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const secret = require('../config').secret;
 
-const nodemailer = require('nodemailer');
 const getTokenFromHeader = require('../config/helper').getTokenFromHeader;
 
 /**
@@ -26,82 +25,6 @@ function createJWTToken(id, username) {
         username: username,
         exp: parseInt(expire.getTime()/ 1000)
     }, secret);
-}
-
-async function sendVerificationMail(firstname, lastname, email, hash, id) {
-    const transporter = nodemailer.createTransport({
-        
-        service: 'gmail',
-        auth: {
-            user: `${process.env.GMAIL_USER}`,
-            pass: `${process.env.GMAIL_PASS}`
-        },
-
-    });
-
-    const receiver = await transporter.sendMail({
-        from: `"Corona Report" <${process.env.GMAIL_USER}>`,
-        to: `${email}`,
-        subject: `Corona Report - Account Verification Email`,
-        text: `Hi, ${firstname} ${lastname} \n Please verify your email address <a href="${process.env.HOSTNAME}/api/verify?id=${id}&hash=${hash}">Click here</a>`,
-        html: `
-            <html>
-            <head>
-                <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-            </head>
-            <body>
-                <h4>Corona Report</h4>
-                <h5>Verification Email</h5>
-                <p>Hi ${lastname}, ${firstname}</p>
-                <p>Please activate your account by clicking on this button</p>
-                <a href="${process.env.HOSTNAME}/api/verify?id=${id}&hash=${hash}">
-                    <button>Activate</button>
-                </a>
-
-                <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-                <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-            </body>
-            </html>
-            </body>
-            </html>
-        `
-
-    });
-
-    console.log("Message sent: %s", receiver.messageId);
-
-    console.log("Preview URL: %s", nodemailer.getTestMessageUrl(receiver));
-
-    const sender = await transporter.sendMail({
-        from: `"Corona Report" <${process.env.GMAIL_USER}>`,
-        to: `${process.env.GMAIL_USER}`, 
-        subject: `Corona Report - New User`,
-        html: `
-            <html>
-            <head>
-                <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-            </head>
-            <body>
-                <h4>Corona Report</h4>
-                <h5>New User</h5>
-                <p>Name: ${lastname}, ${firstname}</p>
-                <span>Email: ${email}</span>
-
-                <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-                <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-            </body>
-            </html>
-            </body>
-            </html>
-        `,
-        text: `New User: ${lastname} ${firstname}, email: ${email}`
-    });
-
-    console.log("Message sent: %s", sender.messageId);
-
-    console.log("Preview URL: %s", nodemailer.getTestMessageUrl(sender));
 }
 
 async function verifyAndRefresh(req, res) {

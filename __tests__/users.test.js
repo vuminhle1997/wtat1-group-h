@@ -24,5 +24,5 @@ describe('Test auth', () => {
             });
 
         expect(res.statusCode).toEqual(200);
-    })
-})
+     });
+});
