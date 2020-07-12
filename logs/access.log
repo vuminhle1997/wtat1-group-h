@@ -1775,3 +1775,6 @@
 ::1 - - [12/Jul/2020:14:13:47 +0000] "POST /api/v1.0/users/refresh HTTP/1.1" 200 320 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36"
 ::1 - - [12/Jul/2020:14:13:47 +0000] "GET /api/v1.0/users/profile HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36"
 ::1 - - [12/Jul/2020:14:13:47 +0000] "GET /api/v1.0/reports/ HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36"
+::1 - - [12/Jul/2020:14:14:15 +0000] "POST /api/v1.0/users/refresh HTTP/1.1" 200 320 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36"
+::1 - - [12/Jul/2020:14:14:15 +0000] "GET /api/v1.0/users/profile HTTP/1.1" 304 - "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36"
+::1 - - [12/Jul/2020:14:14:15 +0000] "GET /api/v1.0/reports/ HTTP/1.1" 200 15578 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36"
