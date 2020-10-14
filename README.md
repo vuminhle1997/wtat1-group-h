@@ -1,4 +1,23 @@
 # Project: Corona Report
+Student project.
+Technologies:
+MERN
+ - React JS
+ - ExpressJS
+ - MongoDB
+ - NodeJS
+
+ - Mongoose
+ - MongoDB Atlas
+ - Jest
+ - EnzymeJS/ SuperUser
+ - JWT
+ - EJS Templating
+ - Material UI
+ - SASS
+
+ - Heroku
+ - Yarn
 
 ## Scripts
 ```console
